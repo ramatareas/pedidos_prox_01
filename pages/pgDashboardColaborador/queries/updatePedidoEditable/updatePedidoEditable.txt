@@ -1,0 +1,6 @@
+UPDATE public.pedidos
+SET 
+  fecha_plazo = {{ datePlazo.selectedDate ? "'" + datePlazo.selectedDate + "'" : null }},
+  id_compra_cliente = {{ camrefcliente.text ? "'" + camrefcliente.text + "'" : null }}, -- <--- AÑADE LA COMA AQUÍ
+  asignado_a_id = {{ selAsignadoA.selectedOptionValue }}
+WHERE id = {{ appsmith.store.currentPedidoId }};

@@ -1,0 +1,10 @@
+UPDATE public.pedidos
+SET comentarios = COALESCE(comentarios, '[]'::jsonb) || 
+                  '{{
+                    JSON.stringify({
+                      "fecha": moment().toISOString(),
+                      "autor": appsmith.user.name || appsmith.user.email, 
+                      "texto": inpNuevoComentario.text
+                    })
+                  }}'::jsonb
+WHERE id = {{ appsmith.store.currentPedidoId }};

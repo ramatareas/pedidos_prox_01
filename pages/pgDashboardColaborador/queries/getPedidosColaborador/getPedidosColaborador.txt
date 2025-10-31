@@ -1,0 +1,23 @@
+SELECT
+    p.id,
+    p.created_at,
+    p.id_compra_cliente,
+    c.nombre AS nombre_cliente,
+    c.cliente_wa,
+    me.estado_interno,
+    me.descripcion_cliente,
+    col.nombre AS nombre_asignado,
+    p.fecha_plazo,
+    p.lista_solicitud,
+    (SELECT s.nombre_subdepartamento FROM subdepartamentos s WHERE s.id = me.subdepartamento_responsable_id) AS subdepto_responsable
+FROM
+    pedidos p
+LEFT JOIN
+    clientes c ON p.cliente_id = c.id
+LEFT JOIN
+    maestro_estados me ON p.estado_id = me.id
+LEFT JOIN
+    colaboradores col ON p.asignado_a_id = col.id
+{{ buildWhere.getWhereClause() }}  -- *** Aquí se inyecta la cláusula WHERE ***
+ORDER BY
+    p.created_at DESC;

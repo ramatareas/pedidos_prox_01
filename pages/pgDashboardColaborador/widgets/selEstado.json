@@ -1,0 +1,76 @@
+{
+  "accentColor": "{{appsmith.theme.colors.primaryColor}}",
+  "animateLoading": true,
+  "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
+  "bottomRow": 43,
+  "boxShadow": "none",
+  "defaultOptionValue": "{{ ((options, serverSideFiltering) => (  getEstadosOrdenados.data.find(e => e.estado_interno === \"pendiente_cotizacion\")?.id ))(selEstado.options, selEstado.serverSideFiltering) }}",
+  "dynamicBindingPathList": [
+    {
+      "key": "accentColor"
+    },
+    {
+      "key": "borderRadius"
+    },
+    {
+      "key": "sourceData"
+    },
+    {
+      "key": "defaultOptionValue"
+    }
+  ],
+  "dynamicHeight": "FIXED",
+  "dynamicPropertyPathList": [
+    {
+      "key": "sourceData"
+    }
+  ],
+  "dynamicTriggerPathList": [
+    {
+      "key": "onOptionChange"
+    },
+    {
+      "key": "onDropdownOpen"
+    }
+  ],
+  "isDisabled": false,
+  "isFilterable": true,
+  "isLoading": false,
+  "isRequired": false,
+  "isVisible": true,
+  "key": "c8r7ql4w7e",
+  "labelAlignment": "left",
+  "labelPosition": "Top",
+  "labelText": "Filtrar por Estado",
+  "labelTextSize": "0.875rem",
+  "labelWidth": 5,
+  "leftColumn": 23,
+  "maxDynamicHeight": 9000,
+  "minDynamicHeight": 4,
+  "minWidth": 450,
+  "mobileBottomRow": 19,
+  "mobileLeftColumn": 0,
+  "mobileRightColumn": 16,
+  "mobileTopRow": 12,
+  "needsErrorInfo": false,
+  "onDropdownOpen": "",
+  "onOptionChange": "{{getPedidosColaborador.run()}}",
+  "optionLabel": "label",
+  "optionValue": "value",
+  "originalBottomRow": 46,
+  "originalTopRow": 39,
+  "parentColumnSpace": 23.53125,
+  "parentId": "0",
+  "parentRowSpace": 10,
+  "placeholderText": "Seleccionar estado...",
+  "renderMode": "CANVAS",
+  "responsiveBehavior": "fill",
+  "rightColumn": 34,
+  "serverSideFiltering": false,
+  "sourceData": "{{ getEstadosOrdenados.data.map(e => ({ label: e.estado_interno, value: e.id })) }}",
+  "topRow": 36,
+  "type": "SELECT_WIDGET",
+  "version": 1,
+  "widgetId": "p40eoo5y0b",
+  "widgetName": "selEstado"
+}

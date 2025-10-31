@@ -1,0 +1,11 @@
+{
+  "gitSyncId": "68f95f221126eb768730abe4_f2c83a74-5321-436b-b223-820c63de9a18",
+  "id": "pgDashboardColaborador_FileUploader",
+  "unpublishedCollection": {
+    "name": "FileUploader",
+    "pageId": "pgDashboardColaborador",
+    "pluginId": "js-plugin",
+    "pluginType": "JS",
+    "variables": []
+  }
+}
