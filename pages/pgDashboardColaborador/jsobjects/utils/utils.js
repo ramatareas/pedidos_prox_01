@@ -457,5 +457,25 @@ getEstadoIndicador: () => {
     
     // LÓGICA 4: "Por entregar" (Ámbar)
     return { text: "Por entregar", color: "#553DE9" }; // Ámbar
+},
+	
+resetFiltroMisTareas: async () => {
+    // Asegura que el filtro de asignación esté APAGADO al cargar la página
+    await storeValue('filtroMisTareasActivo', false);
+},
+
+onPageLoadLogic: async () => {
+    // 1. Limpieza forzada del filtro fantasma (clave para ver todos los registros)
+    await storeValue('filtroMisTareasActivo', false); 
+
+    // 2. Ejecuta las consultas de datos maestros (deben estar con "Run on Page Load" en OFF)
+    // Ejecutar getColaboradores es vital, ya que contiene el On Success que dispara otros flujos en el JSON original
+    await getColaboradores.run(); 
+    await getClientes_filtro.run();
+    await getEstadosOrdenados.run();
+    await getSubdepartamentos.run();
+
+    // 3. Ejecuta la consulta principal de pedidos (debe estar con "Run on Page Load" en OFF)
+    await getPedidosColaborador.run();
 }
 }

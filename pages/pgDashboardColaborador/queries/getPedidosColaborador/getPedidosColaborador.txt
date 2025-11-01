@@ -18,6 +18,7 @@ LEFT JOIN
     maestro_estados me ON p.estado_id = me.id
 LEFT JOIN
     colaboradores col ON p.asignado_a_id = col.id
-{{ buildWhere.getWhereClause() }}  -- *** Aquí se inyecta la cláusula WHERE ***
+WHERE 1=1 -- Cláusula base
+{{ buildWhere.getWhereClause() }}  -- Esta cláusula ahora NO incluye las restricciones de estado
 ORDER BY
     p.created_at DESC;

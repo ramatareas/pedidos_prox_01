@@ -1,11 +1,11 @@
 {
-  "gitSyncId": "68f95f221126eb768730abe4_af76972d-e3be-49fa-beed-5aeff0148073",
-  "id": "pgDashboardColaborador_getSubdepartamentos",
+  "gitSyncId": "68f95f221126eb768730abe4_676c99d3-56f6-45f3-99b8-a000d79bde06",
+  "id": "pgDashboardColaborador_getPedidosParaCharts",
   "pluginId": "postgres-plugin",
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "SELECT\n    id,\n    nombre_subdepartamento\nFROM\n    subdepartamentos\nORDER BY\n    nombre_subdepartamento;",
+      "body": "SELECT \n    p.fecha_plazo,\n    me.estado_interno,\n    me.orden_visual\nFROM \n    pedidos p\nJOIN \n    maestro_estados me ON p.estado_id = me.id\nWHERE \n    me.es_paso_final_venta = false \n    AND me.estado_interno != 'Cancelado'\n    -- (Asumiendo que los cancelados o finalizados se marcan así en maestro_estados)",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [
@@ -23,9 +23,9 @@
       "pluginId": "postgres-plugin"
     },
     "dynamicBindingPathList": [],
-    "name": "getSubdepartamentos",
+    "name": "getPedidosParaCharts",
     "pageId": "pgDashboardColaborador",
-    "runBehaviour": "MANUAL",
+    "runBehaviour": "ON_PAGE_LOAD",
     "userSetOnLoad": true
   }
 }

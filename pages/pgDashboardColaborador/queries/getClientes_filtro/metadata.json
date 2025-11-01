@@ -1,11 +1,11 @@
 {
-  "gitSyncId": "68f95f221126eb768730abe4_af76972d-e3be-49fa-beed-5aeff0148073",
-  "id": "pgDashboardColaborador_getSubdepartamentos",
+  "gitSyncId": "68f95f221126eb768730abe4_0f8c839d-2fc3-42b5-b824-68cdd955f99b",
+  "id": "pgDashboardColaborador_getClientes_filtro",
   "pluginId": "postgres-plugin",
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "SELECT\n    id,\n    nombre_subdepartamento\nFROM\n    subdepartamentos\nORDER BY\n    nombre_subdepartamento;",
+      "body": "SELECT id, nombre FROM clientes ORDER BY nombre;",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [
@@ -23,7 +23,7 @@
       "pluginId": "postgres-plugin"
     },
     "dynamicBindingPathList": [],
-    "name": "getSubdepartamentos",
+    "name": "getClientes_filtro",
     "pageId": "pgDashboardColaborador",
     "runBehaviour": "MANUAL",
     "userSetOnLoad": true

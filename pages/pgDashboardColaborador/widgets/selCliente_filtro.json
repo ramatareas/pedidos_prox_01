@@ -2,9 +2,9 @@
   "accentColor": "{{appsmith.theme.colors.primaryColor}}",
   "animateLoading": true,
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
-  "bottomRow": 18,
+  "bottomRow": 41,
   "boxShadow": "none",
-  "defaultOptionValue": "GREEN",
+  "defaultOptionValue": "",
   "dynamicBindingPathList": [
     {
       "key": "accentColor"
@@ -20,11 +20,17 @@
   "dynamicPropertyPathList": [
     {
       "key": "sourceData"
+    },
+    {
+      "key": "onOptionChange"
     }
   ],
   "dynamicTriggerPathList": [
     {
       "key": "onOptionChange"
+    },
+    {
+      "key": "onDropdownOpen"
     }
   ],
   "isDisabled": false,
@@ -35,35 +41,36 @@
   "key": "c8r7ql4w7e",
   "labelAlignment": "left",
   "labelPosition": "Top",
-  "labelText": "Filtrar por Subdepartamento...",
+  "labelText": "Filtrar por Cliente",
   "labelTextSize": "0.875rem",
   "labelWidth": 5,
-  "leftColumn": 0,
+  "leftColumn": 17,
   "maxDynamicHeight": 9000,
   "minDynamicHeight": 4,
   "minWidth": 450,
-  "mobileBottomRow": 18,
-  "mobileLeftColumn": 2,
-  "mobileRightColumn": 22,
-  "mobileTopRow": 11,
+  "mobileBottomRow": 19,
+  "mobileLeftColumn": 0,
+  "mobileRightColumn": 16,
+  "mobileTopRow": 12,
   "needsErrorInfo": false,
-  "onOptionChange": "{{getPedidosColaborador.run()}}",
+  "onDropdownOpen": "",
+  "onOptionChange": "{{\n(async () => {\n    // Borrar selección en todos los gráficos para anular su filtro\n    await resetWidget(\"chartAtrasados\", true);\n    await resetWidget(\"chartEnTiempo\", true);\n    await resetWidget(\"chartAmbos\", true);\n\n    // Ejecutar la consulta de la tabla (que ahora solo usará los filtros desplegables)\n    await getPedidosColaborador.run();\n})();\n}}",
   "optionLabel": "label",
   "optionValue": "value",
-  "originalBottomRow": 40,
-  "originalTopRow": 33,
+  "originalBottomRow": 46,
+  "originalTopRow": 39,
   "parentColumnSpace": 23.53125,
   "parentId": "0",
   "parentRowSpace": 10,
-  "placeholderText": "Select option",
+  "placeholderText": "Seleccionar cliente...",
   "renderMode": "CANVAS",
   "responsiveBehavior": "fill",
-  "rightColumn": 20,
+  "rightColumn": 33,
   "serverSideFiltering": false,
-  "sourceData": "{{ getSubdepartamentos.data.map(s => ({ label: s.nombre_subdepartamento, value: s.id })) }}",
-  "topRow": 11,
+  "sourceData": "{{ getClientes_filtro.data.map(c => ({ label: c.nombre, value: c.id })) }}",
+  "topRow": 35,
   "type": "SELECT_WIDGET",
   "version": 1,
-  "widgetId": "g49q4pl195",
-  "widgetName": "selSubdepto"
+  "widgetId": "xfvhzfrr7c",
+  "widgetName": "selCliente_filtro"
 }

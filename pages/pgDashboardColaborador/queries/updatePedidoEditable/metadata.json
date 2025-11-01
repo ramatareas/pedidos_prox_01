@@ -5,7 +5,7 @@
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "UPDATE public.pedidos\nSET \n  fecha_plazo = {{ datePlazo.selectedDate ? \"'\" + datePlazo.selectedDate + \"'\" : null }},\n  id_compra_cliente = {{ camrefcliente.text ? \"'\" + camrefcliente.text + \"'\" : null }}, -- <--- AÑADE LA COMA AQUÍ\n  asignado_a_id = {{ selAsignadoA.selectedOptionValue }}\nWHERE id = {{ appsmith.store.currentPedidoId }};",
+      "body": "UPDATE public.pedidos\nSET \n  fecha_plazo = {{ datePlazo.selectedDate ? \"'\" + datePlazo.selectedDate + \"'\" : null }},\n  id_compra_cliente = {{ camrefcliente.text ? \"'\" + camrefcliente.text + \"'\" : null }},\n  \n  -- LÍNEA CORREGIDA:\n  asignado_a_id = {{ selAsignadoA.selectedOptionValue ? selAsignadoA.selectedOptionValue : null }}\n  \nWHERE id = {{ appsmith.store.currentPedidoId }};",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [

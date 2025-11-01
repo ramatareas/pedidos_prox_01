@@ -1,0 +1,12 @@
+SELECT 
+    p.fecha_plazo,
+    me.estado_interno,
+    me.orden_visual
+FROM 
+    pedidos p
+JOIN 
+    maestro_estados me ON p.estado_id = me.id
+WHERE 
+    me.es_paso_final_venta = false 
+    AND me.estado_interno != 'Cancelado'
+    -- (Asumiendo que los cancelados o finalizados se marcan así en maestro_estados)

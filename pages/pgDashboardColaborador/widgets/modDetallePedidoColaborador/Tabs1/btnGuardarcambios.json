@@ -14,7 +14,11 @@
       "key": "borderRadius"
     }
   ],
-  "dynamicPropertyPathList": [],
+  "dynamicPropertyPathList": [
+    {
+      "key": "onClick"
+    }
+  ],
   "dynamicTriggerPathList": [
     {
       "key": "onClick"
@@ -32,7 +36,7 @@
   "mobileRightColumn": 17,
   "mobileTopRow": 35,
   "needsErrorInfo": false,
-  "onClick": "{{updatePedidoEditable.run().then(() => {\n  showAlert('¡Cambios guardados!', 'success');\n  getPedidoDetalle.run();\n  getPedidosColaborador.run();\n}).catch(() => {\n  showAlert(updatePedidoEditable.data?.message || 'Error desconocido', '');\n});}}",
+  "onClick": "{{\n  (async () => {\n    try {\n      // --- INICIO: INTENTAR GUARDAR Y REFRESCAR ---\n      \n      // Paso 1: Ejecuta la consulta que guarda los cambios y espera.\n      await updatePedidoEditable.run();\n      \n      // Paso 2: Si el guardado tuvo éxito, refresca los datos.\n      await getPedidoDetalle.run(); \n      await getPedidosColaborador.run(); \n      \n      // Paso 3: Muestra alerta de éxito.\n      showAlert('¡Cambios guardados exitosamente!', 'success');\n      \n    } catch (error) {\n      // --- INICIO: MANEJO DE ERRORES ---\n      \n      // Paso 4: Si CUALQUIERA de los 'await' en el 'try' falla, se ejecutará esto.\n      showAlert('Error al guardar los cambios: ' + error.message, 'error');\n      \n    }\n  })();\n}}",
   "originalBottomRow": 38,
   "originalTopRow": 34,
   "parentColumnSpace": 18.498291015625,

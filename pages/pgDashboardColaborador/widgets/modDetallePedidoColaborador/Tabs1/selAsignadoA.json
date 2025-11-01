@@ -4,7 +4,7 @@
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
   "bottomRow": 4,
   "boxShadow": "none",
-  "defaultOptionValue": "{{ ((options, serverSideFiltering) => (  getPedidoDetalle.data[0]?.asignado_a_id ))(Select1.options, Select1.serverSideFiltering) }}",
+  "defaultOptionValue": "{{ ((options, serverSideFiltering) => (  getPedidoDetalle.data[0]?.asignado_a_id ))(selAsignadoA.options, selAsignadoA.serverSideFiltering) }}",
   "dynamicBindingPathList": [
     {
       "key": "accentColor"

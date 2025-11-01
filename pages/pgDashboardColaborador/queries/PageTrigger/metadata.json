@@ -1,11 +1,11 @@
 {
-  "gitSyncId": "68f95f221126eb768730abe4_af76972d-e3be-49fa-beed-5aeff0148073",
-  "id": "pgDashboardColaborador_getSubdepartamentos",
+  "gitSyncId": "68f95f221126eb768730abe4_92af890f-4a1f-43f9-9283-b066a8b1550c",
+  "id": "pgDashboardColaborador_PageTrigger",
   "pluginId": "postgres-plugin",
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "SELECT\n    id,\n    nombre_subdepartamento\nFROM\n    subdepartamentos\nORDER BY\n    nombre_subdepartamento;",
+      "body": "SELECT 1; -- Consulta simple para verificar la conexión y disparar el evento.",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [
@@ -23,9 +23,9 @@
       "pluginId": "postgres-plugin"
     },
     "dynamicBindingPathList": [],
-    "name": "getSubdepartamentos",
+    "name": "PageTrigger",
     "pageId": "pgDashboardColaborador",
     "runBehaviour": "MANUAL",
-    "userSetOnLoad": true
+    "userSetOnLoad": false
   }
 }
