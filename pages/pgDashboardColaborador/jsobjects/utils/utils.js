@@ -337,22 +337,33 @@ saveProductChangesAndUpdateState: async () => {
     try {
         // 1. Ejecuta y ESPERA a que termine de guardar la lista
         await updateListaProductos.run();
-        console.log("Lista de productos guardada."); // Para depurar
+        console.log("Lista de productos guardada.");
 
         // 2. Si la lista se guardó bien, calcula el nuevo estado
         const nuevoEstadoId = utils.calcularNuevoEstadoId();
-        console.log("Nuevo estado ID calculado:", nuevoEstadoId); // Para depurar
+        console.log("Nuevo estado ID calculado:", nuevoEstadoId);
 
         try {
             // 3. Ejecuta y ESPERA a que termine de guardar el estado general
             await updateEstadoPedidoGeneral.run({ newEstadoId: nuevoEstadoId });
-            console.log("Estado general guardado."); // Para depurar
+            console.log("Estado general guardado.");
 
             // 4. Si el estado se guardó bien, AHORA refresca los datos (esperando a cada uno)
-            console.log("Refrescando getPedidoDetalle..."); // Para depurar
+            console.log("Refrescando getPedidoDetalle...");
             await getPedidoDetalle.run();
-            console.log("Refrescando getPedidosColaborador..."); // Para depurar
+            console.log("Refrescando getPedidosColaborador...");
             await getPedidosColaborador.run();
+            
+            // --- INICIO: LÓGICA AÑADIDA PARA GRÁFICOS ---
+            console.log("Refrescando getPedidosParaCharts...");
+            await getPedidosParaCharts.run(); // Ejecuta la consulta de datos de gráficos
+            
+            // Fuerza el reseteo de la selección de los gráficos para que se repinten con los nuevos datos
+            // Esto es crucial para que los gráficos reflejen el nuevo estado.
+            await resetWidget("chartAtrasados", true);
+            await resetWidget("chartEnTiempo", true);
+            await resetWidget("chartAmbos", true);
+            // --- FIN: LÓGICA AÑADIDA PARA GRÁFICOS ---
 
             showAlert('¡Lista y estado guardados correctamente!', 'success');
 
@@ -367,9 +378,7 @@ saveProductChangesAndUpdateState: async () => {
         console.error("Error al guardar lista productos:", listaError);
         showAlert('Error al guardar la lista de productos.', 'error');
     }
-}, // Fin de la función asíncrona
-
-// Nueva función para actualizar el estado_item de todos los productos en la lista actual
+},
 updateEstadoItemsLote: () => {
     // Obtiene el estado seleccionado en el nuevo dropdown
     const nuevoEstado = selEstadoLote.selectedOptionValue;
@@ -411,52 +420,25 @@ updateEstadoItemsLote: () => {
         showModal('modVerComentario');
     },
 
-// Reemplaza esta función en tu JSObject 'utils'
-
-getEstadoIndicador: () => {
-    // 1. Asegurarnos de que los datos necesarios están cargados
+// MODIFICAR FIRMA: La función ahora acepta estado y fecha
+getEstadoIndicador: (estadoInterno, fechaPlazoStr) => { 
+    // 1. Lógica para determinar el orden (necesitas obtener el orden_visual)
     const estados = getEstadosOrdenados.data;
-    const pedido = getPedidoDetalle.data;
+    const estadoActual = estados.find(e => e.estado_interno === estadoInterno);
+    const orden = estadoActual ? estadoActual.orden_visual : -1;
 
-    if (!pedido || !pedido.length || !estados || !estados.length) {
-        return { text: "Cargando...", color: "#6B7280" }; 
-    }
+    // 2. Lógica de Plazo (similar a la original)
+    if (orden > 9) return { text: "Entregado", color: "GREEN" };
+    if (orden === 0) return { text: "Cancelado", color: "#6B7280" };
 
-    // --- 2. ¡EL CAMBIO CLAVE! ---
-    // Usamos la misma función que Text6 y Progress1 para saber el estado VERDADERO
-    const estadoIdCalculado = utils.calcularNuevoEstadoId(); 
-    const estadoActual = estados.find(e => e.id === estadoIdCalculado);
-    
-    if (!estadoActual) {
-        return { text: "Sin Estado", color: "#6B7280" };
-    }
-    
-    const orden = estadoActual.orden_visual; // Este 'orden' ahora SÍ es 10 ("entregado")
-
-    // --- 3. APLICAR LA LÓGICA (Ahora sí funcionará en el orden correcto) ---
-
-    // LÓGICA 1: "Entregado" (Verde)
-    // (orden > 9 es verdadero (10 > 9), así que devolverá "Entregado")
-    if (orden > 9) {
-        return { text: "Entregado", color: "GREEN" };
-    }
-
-    // LÓGICA 2: "Cancelado" (Gris)
-    if (orden === 0) {
-        return { text: "Cancelado", color: "#6B7280" };
-    }
-
-    // --- Si llegamos aquí, sabemos que el pedido NO está entregado NI cancelado (orden 1-9) ---
-    const fechaPlazo = moment(pedido[0].fecha_plazo);
+    const fechaPlazo = moment(fechaPlazoStr);
     const fechaActual = moment(); 
 
-    // LÓGICA 3: "Retrasado" (Rojo)
     if (fechaPlazo.isBefore(fechaActual)) {
-        return { text: "Retrasado", color: "RED" };
+        return { text: "Retrasado", color: "#b91c1c" };
     }
-    
-    // LÓGICA 4: "Por entregar" (Ámbar)
-    return { text: "Por entregar", color: "#553DE9" }; // Ámbar
+
+    return { text: "En Tiempo", color: "#553DE9" }; // Usando "En Tiempo"
 },
 	
 resetFiltroMisTareas: async () => {

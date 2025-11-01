@@ -1,0 +1,16 @@
+INSERT INTO public.clientes (
+    nombre,
+    contacto,
+    tel_cel,
+    cliente_wa,
+    direccion,
+    email
+)
+VALUES (
+    '{{ inpNombreCliente.text || null }}',
+    '{{ inpContactoCliente.text || null }}',
+    '{{ inpTelCelCliente.text || null }}',
+    '{{ appsmith.store.temp_cliente_wa || null }}',
+    '{{ inpDireccionCliente.text || null }}',
+    '{{ inpEmailCliente.text || null }}'
+);

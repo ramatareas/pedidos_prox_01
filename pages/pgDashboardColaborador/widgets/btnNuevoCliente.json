@@ -3,19 +3,18 @@
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
   "bottomRow": 42,
   "boxShadow": "none",
-  "buttonColor": "green",
+  "buttonColor": "{{appsmith.theme.colors.primaryColor}}",
   "buttonVariant": "PRIMARY",
   "disabledWhenInvalid": false,
   "dynamicBindingPathList": [
     {
       "key": "borderRadius"
-    }
-  ],
-  "dynamicPropertyPathList": [
+    },
     {
-      "key": "onClick"
+      "key": "buttonColor"
     }
   ],
+  "dynamicPropertyPathList": [],
   "dynamicTriggerPathList": [
     {
       "key": "onClick"
@@ -26,14 +25,14 @@
   "isLoading": false,
   "isVisible": true,
   "key": "lhl4cuzvoj",
-  "leftColumn": 33,
+  "leftColumn": 53,
   "minWidth": 120,
   "mobileBottomRow": 42,
   "mobileLeftColumn": 48,
   "mobileRightColumn": 64,
   "mobileTopRow": 38,
   "needsErrorInfo": false,
-  "onClick": "{{\n(async () => {\n    // Resetea TODOS los gráficos\n    await resetWidget(\"chartAtrasados\", true);\n    await resetWidget(\"chartEnTiempo\", true);\n    await resetWidget(\"chartAmbos\", true);\n\n    // Resetea TODOS los filtros desplegables\n    await resetWidget(\"selEstado\", true);\n    await resetWidget(\"selCliente_filtro\", true);\n    await resetWidget(\"selAsignadoA_filtro\", true);\n\n    // Ejecuta la consulta\n    await getPedidosColaborador.run();\n})();\n}}",
+  "onClick": "{{navigateTo('pgAdminClientes', {}, 'SAME_WINDOW');}}",
   "parentColumnSpace": 23.390625,
   "parentId": "0",
   "parentRowSpace": 10,
@@ -42,11 +41,11 @@
   "renderMode": "CANVAS",
   "resetFormOnClick": false,
   "responsiveBehavior": "hug",
-  "rightColumn": 42,
-  "text": "Todos los pedidos",
+  "rightColumn": 62,
+  "text": "Lista de clientes",
   "topRow": 36,
   "type": "BUTTON_WIDGET",
   "version": 1,
-  "widgetId": "f6nu9ei3au",
-  "widgetName": "btnLimpiarFiltroChart"
+  "widgetId": "jvjsdn5ar5",
+  "widgetName": "btnNuevoCliente"
 }

@@ -4,7 +4,7 @@
   "borderColor": "#E0DEDE",
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
   "borderWidth": "1",
-  "bottomRow": 87,
+  "bottomRow": 85,
   "boxShadow": "{{appsmith.theme.boxShadow.appBoxShadow}}",
   "cachedTableData": {},
   "canFreezeColumn": true,
@@ -32,6 +32,7 @@
     }
   },
   "columnOrder": [
+    "customColumn1",
     "id",
     "id_compra_cliente",
     "nombre_cliente",
@@ -39,20 +40,21 @@
     "fecha_plazo",
     "estado_interno",
     "nombre_asignado",
-    "subdepto_responsable",
     "lista_solicitud",
+    "subdepto_responsable",
     "cliente_wa",
     "descripcion_cliente"
   ],
-  "columnUpdatedAt": 1761941872508,
+  "columnUpdatedAt": 1762032407153,
   "columnWidthMap": {
     "created_at": 170,
-    "estado_interno": 283,
-    "fecha_plazo": 238,
+    "customColumn1": 148,
+    "estado_interno": 163,
+    "fecha_plazo": 148,
     "id": 144,
-    "id_compra_cliente": 247,
+    "id_compra_cliente": 167,
     "lista_solicitud": 166,
-    "nombre_asignado": 151,
+    "nombre_asignado": 152,
     "nombre_cliente": 156,
     "subdepto_responsable": 127
   },
@@ -110,11 +112,23 @@
     },
     {
       "key": "primaryColumns.subdepto_responsable.computedValue"
+    },
+    {
+      "key": "primaryColumns.customColumn1.computedValue"
+    },
+    {
+      "key": "primaryColumns.customColumn1.cellBackground"
     }
   ],
   "dynamicPropertyPathList": [
     {
       "key": "tableData"
+    },
+    {
+      "key": "primaryColumns.customColumn1.textColor"
+    },
+    {
+      "key": "primaryColumns.customColumn1.cellBackground"
     }
   ],
   "dynamicTriggerPathList": [
@@ -152,6 +166,7 @@
   "parentColumnSpace": 23.53125,
   "parentId": "0",
   "parentRowSpace": 10,
+  "primaryColumnId": "id",
   "primaryColumns": {
     "cliente_wa": {
       "alias": "cliente_wa",
@@ -210,6 +225,43 @@
       "originalId": "created_at",
       "outputFormat": "DD/MM/YYYY HH:mm",
       "sticky": "",
+      "textSize": "0.875rem",
+      "thousandSeparator": true,
+      "validation": {},
+      "verticalAlignment": "CENTER",
+      "width": 150
+    },
+    "customColumn1": {
+      "alias": "Status de plazo",
+      "allowCellWrapping": false,
+      "allowSameOptionsInNewRow": true,
+      "buttonStyle": "rgb(3, 179, 101)",
+      "cellBackground": "{{(() => { const tableData = tblPedidos.processedTableData || []; return tableData.length > 0 ? tableData.map((currentRow, currentIndex) => ( utils.getEstadoIndicador(currentRow.estado_interno, currentRow.fecha_plazo).color )) :  utils.getEstadoIndicador(currentRow.estado_interno, currentRow.fecha_plazo).color  })()}}",
+      "columnType": "text",
+      "computedValue": "{{(() => { const tableData = tblPedidos.processedTableData || []; return tableData.length > 0 ? tableData.map((currentRow, currentIndex) => ( utils.getEstadoIndicador(currentRow.estado_interno, currentRow.fecha_plazo).text )) :  utils.getEstadoIndicador(currentRow.estado_interno, currentRow.fecha_plazo).text  })()}}",
+      "currencyCode": "USD",
+      "customAlias": "",
+      "decimals": 0,
+      "enableFilter": true,
+      "enableSort": true,
+      "fontStyle": "BOLD",
+      "horizontalAlignment": "CENTER",
+      "id": "customColumn1",
+      "index": 10,
+      "isCellEditable": false,
+      "isCellVisible": true,
+      "isDerived": true,
+      "isDisabled": false,
+      "isDiscardVisible": true,
+      "isEditable": false,
+      "isSaveVisible": true,
+      "isVisible": true,
+      "label": "Status de plazo",
+      "labelColor": "#FFFFFF",
+      "notation": "standard",
+      "originalId": "customColumn1",
+      "sticky": "left",
+      "textColor": "#FFFFFF",
       "textSize": "0.875rem",
       "thousandSeparator": true,
       "validation": {},
@@ -379,7 +431,7 @@
       "allowSameOptionsInNewRow": true,
       "buttonLabel": "Ver Productos",
       "columnType": "html",
-      "computedValue": "{{(() => { const tableData = tblPedidos.processedTableData || []; return tableData.length > 0 ? tableData.map((currentRow, currentIndex) => ('')) : '' })()}}",
+      "computedValue": "{{(() => { const tableData = tblPedidos.processedTableData || []; return tableData.length > 0 ? tableData.map((currentRow, currentIndex) => (\n  (() => {\n    const items = currentRow.lista_solicitud;\n    let count = 0;\n\n    // Caso 1: La lista ya es un array\n    if (Array.isArray(items)) {\n      count = items.length;\n    } \n    // Caso 2: La lista es una cadena JSON (o nula)\n    else {\n      try {\n        const parsedItems = JSON.parse(items || '[]');\n        count = Array.isArray(parsedItems) ? parsedItems.length : 0;\n      } catch (e) {\n        return 'Error (JSON)';\n      }\n    }\n    \n    // Devolver el conteo con la palabra \"PRODUCTOS\" (singular/plural)\n    return `${count} Articulo${count !== 1 ? 's' : ''}`;\n  })()\n)) : \n  (() => {\n    const items = currentRow.lista_solicitud;\n    let count = 0;\n\n    // Caso 1: La lista ya es un array\n    if (Array.isArray(items)) {\n      count = items.length;\n    } \n    // Caso 2: La lista es una cadena JSON (o nula)\n    else {\n      try {\n        const parsedItems = JSON.parse(items || '[]');\n        count = Array.isArray(parsedItems) ? parsedItems.length : 0;\n      } catch (e) {\n        return 'Error (JSON)';\n      }\n    }\n    \n    // Devolver el conteo con la palabra \"PRODUCTOS\" (singular/plural)\n    return `${count} Articulo${count !== 1 ? 's' : ''}`;\n  })()\n })()}}",
       "currencyCode": "USD",
       "customAlias": "",
       "decimals": 0,
@@ -395,8 +447,8 @@
       "isDiscardVisible": true,
       "isEditable": false,
       "isSaveVisible": true,
-      "isVisible": false,
-      "label": "lista_solicitud",
+      "isVisible": true,
+      "label": "No. de productos",
       "notation": "standard",
       "onClick": "{{showModal(modDetallePedidoColaborador.name);}}",
       "originalId": "lista_solicitud",
@@ -505,9 +557,10 @@
   "responsiveBehavior": "fill",
   "rightColumn": 64,
   "searchKey": "",
+  "serverSidePaginationEnabled": false,
   "tableData": "{{getPedidosColaborador.data}}",
   "textSize": "0.875rem",
-  "topRow": 42,
+  "topRow": 44,
   "totalRecordsCount": 0,
   "type": "TABLE_WIDGET_V2",
   "version": 2,

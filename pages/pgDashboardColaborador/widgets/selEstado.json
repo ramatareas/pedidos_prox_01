@@ -2,7 +2,7 @@
   "accentColor": "{{appsmith.theme.colors.primaryColor}}",
   "animateLoading": true,
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
-  "bottomRow": 41,
+  "bottomRow": 42,
   "boxShadow": "none",
   "defaultOptionValue": "",
   "dynamicBindingPathList": [
@@ -14,6 +14,9 @@
     },
     {
       "key": "sourceData"
+    },
+    {
+      "key": "labelTextColor"
     }
   ],
   "dynamicHeight": "FIXED",
@@ -41,7 +44,9 @@
   "key": "c8r7ql4w7e",
   "labelAlignment": "left",
   "labelPosition": "Top",
+  "labelStyle": "BOLD",
   "labelText": "Filtrar por Estado",
+  "labelTextColor": "{{appsmith.theme.colors.primaryColor}}",
   "labelTextSize": "0.875rem",
   "labelWidth": 5,
   "leftColumn": 1,
@@ -65,10 +70,10 @@
   "placeholderText": "Seleccionar estado...",
   "renderMode": "CANVAS",
   "responsiveBehavior": "fill",
-  "rightColumn": 17,
+  "rightColumn": 12,
   "serverSideFiltering": false,
   "sourceData": "{{ getEstadosOrdenados.data.map(e => ({ label: e.estado_interno, value: e.id })) }}",
-  "topRow": 35,
+  "topRow": 36,
   "type": "SELECT_WIDGET",
   "version": 1,
   "widgetId": "p40eoo5y0b",

@@ -1,0 +1,13 @@
+SELECT 
+    id,
+    created_at,
+    cliente_wa,
+    nombre,
+    contacto, -- Nombre de columna corregido en Supabase
+    tel_cel,
+    direccion, -- Nueva columna (asumiendo que ya la creaste con SQL)
+    email      -- Nueva columna (asumiendo que ya la creaste con SQL)
+FROM 
+    public.clientes
+ORDER BY 
+    id DESC;

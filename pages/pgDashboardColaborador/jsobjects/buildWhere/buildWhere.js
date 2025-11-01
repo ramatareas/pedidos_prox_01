@@ -1,29 +1,33 @@
 export default {
     getWhereClause: () => {
         let conditions = [];
-        let chartFilterActive = false; 
-
-        // Prioridad 1: Filtro de Gráfico
-        // Si el usuario hizo click en un chart, se usa ese estado.
+        let chartFilterActive = false;
+        
+        // Obtenemos los valores seleccionados de los gráficos
         const atrasadoX = chartAtrasados.selectedDataPoint?.x;
         const enTiempoX = chartEnTiempo.selectedDataPoint?.x;
         const ambosX = chartAmbos.selectedDataPoint?.x;
 
+        // Prioridad 1: Filtro de Gráfico (Atrasados)
         if (!!atrasadoX) { 
-            conditions.push(`me.estado_interno = '${atrasadoX}'`);
+            conditions.push(`me.estado_interno = '${atrasadoX}' AND p.fecha_plazo < NOW()`);
             chartFilterActive = true;
         } 
+        
+        // Prioridad 1: Filtro de Gráfico (A Tiempo)
         else if (!!enTiempoX) {
-            conditions.push(`me.estado_interno = '${enTiempoX}'`);
+            conditions.push(`me.estado_interno = '${enTiempoX}' AND p.fecha_plazo >= NOW()`);
             chartFilterActive = true;
         } 
+        
+        // Prioridad 1: Filtro de Gráfico (Ambos)
         else if (!!ambosX) {
             conditions.push(`me.estado_interno = '${ambosX}'`);
             chartFilterActive = true;
         }
-
-        // Prioridad 2: Filtros Desplegables
-        if (!chartFilterActive) {
+        
+        // Prioridad 2: Filtros Desplegables (SÓLO si NINGÚN gráfico está activo)
+        else {
             // Filtro Estado
             if (!!(selEstado.selectedOptionValue)) {
                 conditions.push(`p.estado_id = ${selEstado.selectedOptionValue}`);
@@ -32,7 +36,7 @@ export default {
             if (!!(selCliente_filtro.selectedOptionValue)) {
                 conditions.push(`p.cliente_id = ${selCliente_filtro.selectedOptionValue}`);
             }
-
+            
             // Filtro Mis Tareas / Asignado A
             if (appsmith.store.filtroMisTareasActivo) {
                 let colaboradorId = 1; 
@@ -43,13 +47,12 @@ export default {
                 conditions.push(`p.asignado_a_id = ${selAsignadoA_filtro.selectedOptionValue}`);
             }
         }
-
-        // Condición Final: Si NO hay filtros, devolvemos cadena vacía.
+        
+        // Condición Final: Si el array está vacío, devolvemos cadena vacía.
         if (conditions.length === 0) {
-            // Si llegamos aquí (Limpiar Filtros o recién cargado), no hay WHERE adicional.
             return ""; 
         }
-
+        
         // Si HAY filtros, le agregamos la palabra AND al inicio.
         return " AND " + conditions.join(" AND ");
     }

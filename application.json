@@ -34,14 +34,6 @@
       "isDefault": true
     },
     {
-      "id": "pgMisPedidosCliente",
-      "isDefault": false
-    },
-    {
-      "id": "pgDashboardDirector",
-      "isDefault": false
-    },
-    {
       "id": "pgAdminClientes",
       "isDefault": false
     }

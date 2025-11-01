@@ -1,0 +1,35 @@
+INSERT INTO pedidos (
+    cliente_id,
+    id_compra_cliente,
+    asignado_a_id,
+    estado_id,
+    fecha_plazo,
+    urls_solicitud_adjuntos, 
+    lista_solicitud,
+    comentarios,
+    historial_estados,
+    documentos_internos
+)
+VALUES (
+    -- Datos del Formulario
+    {{ selClienteNuevoPedido.selectedOptionValue }},       -- cliente_id (Requerido)
+    {{ inpRefClienteNuevoPedido.text }},                    -- id_compra_cliente (Requerido)
+    {{ selAsignadoANuevoPedido.selectedOptionValue }},      -- asignado_a_id (Requerido)
+    
+    -- VALOR AUTOMÁTICO: Estado
+    (
+        SELECT id
+        FROM maestro_estados 
+        WHERE estado_interno = 'pendiente_cotizacion'
+    ),                                                      -- estado_id (Fijo: Pendiente)
+    
+    -- VALOR AUTOMÁTICO: Fecha de Plazo (+48 horas)
+    NOW() + interval '48 hour',                             -- fecha_plazo (Calculado)
+    
+    -- Inicialización de JSONB a arrays vacíos (para edición posterior)
+    '[]'::jsonb,                                            -- urls_solicitud_adjuntos (JSONB)
+    '[]'::jsonb,                                            -- lista_solicitud (JSONB)
+    '[]'::jsonb,                                            -- comentarios (JSONB)
+    '[]'::jsonb,                                            -- historial_estados (JSONB)
+    '[]'::jsonb                                             -- documentos_internos (JSONB)
+);

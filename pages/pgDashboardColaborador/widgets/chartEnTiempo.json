@@ -7,7 +7,7 @@
   "boxShadow": "{{appsmith.theme.boxShadow.appBoxShadow}}",
   "chartData": {
     "mzl5xmbhvx": {
-      "color": "GREEN",
+      "color": "#553DE9",
       "data": "{{ chartUtils.prepararDatos().dataEnTiempo }}",
       "seriesName": ""
     }
@@ -95,7 +95,7 @@
   "isVisible": true,
   "key": "icjtvmyk80",
   "labelOrientation": "auto",
-  "leftColumn": 1,
+  "leftColumn": 43,
   "minWidth": 450,
   "mobileBottomRow": 31,
   "mobileLeftColumn": 0,
@@ -108,7 +108,7 @@
   "parentRowSpace": 10,
   "renderMode": "CANVAS",
   "responsiveBehavior": "fill",
-  "rightColumn": 21,
+  "rightColumn": 63,
   "showDataPointLabel": true,
   "topRow": 1,
   "type": "CHART_WIDGET",

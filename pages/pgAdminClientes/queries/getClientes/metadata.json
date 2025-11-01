@@ -1,11 +1,11 @@
 {
-  "gitSyncId": "68f95f221126eb768730abe4_0f8c839d-2fc3-42b5-b824-68cdd955f99b",
-  "id": "pgDashboardColaborador_getClientes_filtro",
+  "gitSyncId": "68f95f221126eb768730abe4_88d2680c-0180-400f-a2e3-50df760ed3a6",
+  "id": "pgAdminClientes_getClientes",
   "pluginId": "postgres-plugin",
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "SELECT id, nombre FROM clientes ORDER BY nombre;",
+      "body": "SELECT \n    id,\n    created_at,\n    cliente_wa,\n    nombre,\n    contacto, -- Nombre de columna corregido en Supabase\n    tel_cel,\n    direccion, -- Nueva columna (asumiendo que ya la creaste con SQL)\n    email      -- Nueva columna (asumiendo que ya la creaste con SQL)\nFROM \n    public.clientes\nORDER BY \n    id DESC;",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [
@@ -23,8 +23,8 @@
       "pluginId": "postgres-plugin"
     },
     "dynamicBindingPathList": [],
-    "name": "getClientes_filtro",
-    "pageId": "pgDashboardColaborador",
+    "name": "getClientes",
+    "pageId": "pgAdminClientes",
     "runBehaviour": "ON_PAGE_LOAD",
     "userSetOnLoad": true
   }

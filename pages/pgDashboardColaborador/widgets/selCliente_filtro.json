@@ -2,7 +2,7 @@
   "accentColor": "{{appsmith.theme.colors.primaryColor}}",
   "animateLoading": true,
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
-  "bottomRow": 41,
+  "bottomRow": 42,
   "boxShadow": "none",
   "defaultOptionValue": "",
   "dynamicBindingPathList": [
@@ -14,6 +14,9 @@
     },
     {
       "key": "sourceData"
+    },
+    {
+      "key": "labelTextColor"
     }
   ],
   "dynamicHeight": "FIXED",
@@ -41,10 +44,12 @@
   "key": "c8r7ql4w7e",
   "labelAlignment": "left",
   "labelPosition": "Top",
+  "labelStyle": "BOLD",
   "labelText": "Filtrar por Cliente",
+  "labelTextColor": "{{appsmith.theme.colors.primaryColor}}",
   "labelTextSize": "0.875rem",
   "labelWidth": 5,
-  "leftColumn": 17,
+  "leftColumn": 12,
   "maxDynamicHeight": 9000,
   "minDynamicHeight": 4,
   "minWidth": 450,
@@ -65,10 +70,10 @@
   "placeholderText": "Seleccionar cliente...",
   "renderMode": "CANVAS",
   "responsiveBehavior": "fill",
-  "rightColumn": 33,
+  "rightColumn": 23,
   "serverSideFiltering": false,
   "sourceData": "{{ getClientes_filtro.data.map(c => ({ label: c.nombre, value: c.id })) }}",
-  "topRow": 35,
+  "topRow": 36,
   "type": "SELECT_WIDGET",
   "version": 1,
   "widgetId": "xfvhzfrr7c",
