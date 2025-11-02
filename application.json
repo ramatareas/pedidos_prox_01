@@ -11,7 +11,7 @@
       "colorStyle": "light",
       "logoAssetId": "",
       "logoConfiguration": "logoAndApplicationTitle",
-      "navStyle": "stacked",
+      "navStyle": "inline",
       "orientation": "top",
       "position": "static",
       "showNavbar": true,
@@ -30,11 +30,11 @@
   "icon": "bag",
   "pages": [
     {
-      "id": "pgDashboardColaborador",
+      "id": "Dashboard",
       "isDefault": true
     },
     {
-      "id": "pgAdminClientes",
+      "id": "Editar clientes",
       "isDefault": false
     }
   ],
@@ -49,7 +49,7 @@
       "colorStyle": "light",
       "logoAssetId": "",
       "logoConfiguration": "logoAndApplicationTitle",
-      "navStyle": "stacked",
+      "navStyle": "inline",
       "orientation": "top",
       "position": "static",
       "showNavbar": true,
