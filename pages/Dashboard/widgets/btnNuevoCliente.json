@@ -32,7 +32,7 @@
   "mobileRightColumn": 64,
   "mobileTopRow": 38,
   "needsErrorInfo": false,
-  "onClick": "{{navigateTo('pgAdminClientes', {}, 'SAME_WINDOW');}}",
+  "onClick": "{{navigateTo('Editar clientes', {}, 'SAME_WINDOW');}}",
   "parentColumnSpace": 23.390625,
   "parentId": "0",
   "parentRowSpace": 10,
