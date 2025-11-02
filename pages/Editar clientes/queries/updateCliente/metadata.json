@@ -5,7 +5,7 @@
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "UPDATE public.clientes\nSET \n    nombre = '{{ inpNombreCliente.text || null }}',\n    contacto = '{{ inpContactoCliente.text || null }}',\n    tel_cel = '{{ inpTelCelCliente.text || null }}',\n    cliente_wa = '{{ appsmith.store.temp_cliente_wa || null }}',\n    direccion = '{{ inpDireccionCliente.text || null }}',\n    email = '{{ inpEmailCliente.text || null }}'\nWHERE \n    id = {{ tblClientes.selectedRow.id }};",
+      "body": "{{\n`UPDATE public.clientes\nSET\n    nombre = '${inpNombreCliente.text || ''}',\n    contacto = '${inpContactoCliente.text || ''}',\n    tel_cel = '${inpTelCelCliente.text || ''}',\n    cliente_wa = '${appsmith.store.temp_cliente_wa || ''}',\n    direccion = '${inpDireccionCliente.text || ''}',\n    email = '${inpEmailCliente.text || ''}'\nWHERE\n    id = ${tblClientes.selectedRow.id};`\n}}",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [

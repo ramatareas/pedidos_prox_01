@@ -1,10 +1,12 @@
-UPDATE public.clientes
-SET 
-    nombre = '{{ inpNombreCliente.text || null }}',
-    contacto = '{{ inpContactoCliente.text || null }}',
-    tel_cel = '{{ inpTelCelCliente.text || null }}',
-    cliente_wa = '{{ appsmith.store.temp_cliente_wa || null }}',
-    direccion = '{{ inpDireccionCliente.text || null }}',
-    email = '{{ inpEmailCliente.text || null }}'
-WHERE 
-    id = {{ tblClientes.selectedRow.id }};
+{{
+`UPDATE public.clientes
+SET
+    nombre = '${inpNombreCliente.text || ''}',
+    contacto = '${inpContactoCliente.text || ''}',
+    tel_cel = '${inpTelCelCliente.text || ''}',
+    cliente_wa = '${appsmith.store.temp_cliente_wa || ''}',
+    direccion = '${inpDireccionCliente.text || ''}',
+    email = '${inpEmailCliente.text || ''}'
+WHERE
+    id = ${tblClientes.selectedRow.id};`
+}}
