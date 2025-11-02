@@ -33,19 +33,19 @@
   },
   "columnOrder": [
     "customColumn1",
+    "estado_interno",
     "id",
-    "id_compra_cliente",
     "nombre_cliente",
+    "id_compra_cliente",
     "created_at",
     "fecha_plazo",
-    "estado_interno",
-    "nombre_asignado",
     "lista_solicitud",
+    "nombre_asignado",
     "subdepto_responsable",
     "cliente_wa",
     "descripcion_cliente"
   ],
-  "columnUpdatedAt": 1762032407153,
+  "columnUpdatedAt": 1762060358302,
   "columnWidthMap": {
     "created_at": 170,
     "customColumn1": 148,

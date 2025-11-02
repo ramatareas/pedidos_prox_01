@@ -1,0 +1,57 @@
+{
+  "animateLoading": true,
+  "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
+  "bottomRow": 6,
+  "boxShadow": "none",
+  "buttonColor": "{{appsmith.theme.colors.primaryColor}}",
+  "buttonVariant": "PRIMARY",
+  "disabledWhenInvalid": false,
+  "dynamicBindingPathList": [
+    {
+      "key": "buttonColor"
+    },
+    {
+      "key": "borderRadius"
+    }
+  ],
+  "dynamicPropertyPathList": [
+    {
+      "key": "onClick"
+    }
+  ],
+  "dynamicTriggerPathList": [
+    {
+      "key": "onClick"
+    }
+  ],
+  "isDefaultClickDisabled": true,
+  "isDisabled": false,
+  "isLoading": false,
+  "isVisible": true,
+  "key": "wg6gk6oqln",
+  "leftColumn": 51,
+  "minWidth": 120,
+  "mobileBottomRow": 39,
+  "mobileLeftColumn": 1,
+  "mobileRightColumn": 17,
+  "mobileTopRow": 35,
+  "needsErrorInfo": false,
+  "onClick": "{{\n  (async () => {\n    try {\n      // --- INICIO: INTENTAR GUARDAR Y REFRESCAR ---\n      \n      // Paso 1: Ejecuta la consulta que guarda los cambios y espera.\n      await updatePedidoEditable.run();\n      \n      // Paso 2: Si el guardado tuvo éxito, refresca los datos.\n      await getPedidoDetalle.run(); \n      await getPedidosColaborador.run(); \n      \n      // Paso 3: Muestra alerta de éxito.\n      showAlert('¡Cambios guardados exitosamente!', 'success');\n      \n    } catch (error) {\n      // --- INICIO: MANEJO DE ERRORES ---\n      \n      // Paso 4: Si CUALQUIERA de los 'await' en el 'try' falla, se ejecutará esto.\n      showAlert('Error al guardar los cambios: ' + error.message, 'error');\n      \n    }\n  })();\n}}",
+  "originalBottomRow": 38,
+  "originalTopRow": 34,
+  "parentColumnSpace": 18.498291015625,
+  "parentId": "8ppt5lb1m4",
+  "parentRowSpace": 10,
+  "placement": "CENTER",
+  "recaptchaType": "V3",
+  "renderMode": "CANVAS",
+  "resetFormOnClick": false,
+  "responsiveBehavior": "hug",
+  "rightColumn": 63,
+  "text": "Guardar Otros Cambios",
+  "topRow": 1,
+  "type": "BUTTON_WIDGET",
+  "version": 1,
+  "widgetId": "kqwfzm4ad5",
+  "widgetName": "btnGuardarcambios"
+}

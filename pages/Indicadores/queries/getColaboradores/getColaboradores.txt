@@ -1,0 +1,3 @@
+SELECT id, nombre
+FROM colaboradores
+ORDER BY nombre;

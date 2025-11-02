@@ -1,7 +1,7 @@
 {
   "appIsExample": false,
   "appLayout": {
-    "type": "FLUID"
+    "type": "MOBILE"
   },
   "applicationDetail": {
     "appPositioning": {
@@ -36,10 +36,14 @@
     {
       "id": "Editar clientes",
       "isDefault": false
+    },
+    {
+      "id": "Indicadores",
+      "isDefault": false
     }
   ],
   "unpublishedAppLayout": {
-    "type": "FLUID"
+    "type": "MOBILE"
   },
   "unpublishedApplicationDetail": {
     "appPositioning": {
