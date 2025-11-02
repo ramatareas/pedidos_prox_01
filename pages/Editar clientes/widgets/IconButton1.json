@@ -30,7 +30,7 @@
   "mobileRightColumn": 59,
   "mobileTopRow": 24,
   "needsErrorInfo": false,
-  "onClick": "{{navigateTo('Dashboard', {}, 'SAME_WINDOW');}}",
+  "onClick": "{{navigateTo('Pedidos', {}, 'SAME_WINDOW');}}",
   "parentColumnSpace": 23.390625,
   "parentId": "0",
   "parentRowSpace": 10,

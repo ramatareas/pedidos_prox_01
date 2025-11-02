@@ -1,3 +1,0 @@
-UPDATE public.pedidos 
-SET estado_id = {{ this.params.newEstadoId }} 
-WHERE id = {{ appsmith.store.currentPedidoId }};

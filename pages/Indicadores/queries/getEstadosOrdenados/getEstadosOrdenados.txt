@@ -1,3 +1,0 @@
-SELECT id, estado_interno, descripcion_cliente, orden_visual
-FROM maestro_estados
-ORDER BY orden_visual;

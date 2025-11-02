@@ -1,1 +1,0 @@
-SELECT 1; -- Consulta simple para verificar la conexión y disparar el evento.

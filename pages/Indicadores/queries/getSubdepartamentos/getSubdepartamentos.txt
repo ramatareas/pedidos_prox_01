@@ -1,7 +1,0 @@
-SELECT
-    id,
-    nombre_subdepartamento
-FROM
-    subdepartamentos
-ORDER BY
-    nombre_subdepartamento;

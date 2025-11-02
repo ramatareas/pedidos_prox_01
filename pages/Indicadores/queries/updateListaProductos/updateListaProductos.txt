@@ -1,5 +1,0 @@
-UPDATE public.pedidos
-SET
-  lista_solicitud = '{{ JSON.stringify(appsmith.store.currentProductList || []) }}'::jsonb
-WHERE
-  id = {{ appsmith.store.currentPedidoId }}; -- <-- CAMBIO AQUÍ

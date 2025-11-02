@@ -1,7 +1,7 @@
 {
   "appIsExample": false,
   "appLayout": {
-    "type": "MOBILE"
+    "type": "FLUID"
   },
   "applicationDetail": {
     "appPositioning": {
@@ -30,20 +30,16 @@
   "icon": "bag",
   "pages": [
     {
-      "id": "Dashboard",
+      "id": "Pedidos",
       "isDefault": true
     },
     {
       "id": "Editar clientes",
       "isDefault": false
-    },
-    {
-      "id": "Indicadores",
-      "isDefault": false
     }
   ],
   "unpublishedAppLayout": {
-    "type": "MOBILE"
+    "type": "FLUID"
   },
   "unpublishedApplicationDetail": {
     "appPositioning": {
