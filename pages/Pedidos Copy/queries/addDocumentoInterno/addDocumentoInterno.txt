@@ -1,0 +1,17 @@
+WITH file_vars AS (
+  SELECT
+    '{{ appsmith.store.tempFile.name }}' AS file_name,
+    'documentos_internos/{{ appsmith.store.currentPedidoId }}/{{ encodeURIComponent(appsmith.store.tempFile.name) }}' AS file_path,
+    '{{ appsmith.store.tempFile.type }}' AS file_type
+)
+
+UPDATE public.pedidos
+SET documentos_internos = 
+    COALESCE(documentos_internos, '[]'::jsonb) || 
+    jsonb_build_object(
+        'nombre_archivo', (SELECT file_name FROM file_vars),
+        'path', (SELECT file_path FROM file_vars),
+        'tipo', (SELECT file_type FROM file_vars),
+        'fecha_carga', NOW()
+    )
+WHERE id = {{ appsmith.store.currentPedidoId }};

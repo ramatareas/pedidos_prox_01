@@ -61,43 +61,41 @@ export default {
 	// Funciones del Workflow (Actualizadas)
 	// ----------------------
 
-	loadCurrentProductList: (selectedPedidoId) => {
-		storeValue('currentPedidoId', selectedPedidoId);
-		console.log("ID guardado en store:", appsmith.store.currentPedidoId);
+loadCurrentProductList: async (selectedPedidoId) => {
+    try {
+        // 1. Guardar el ID del pedido
+        await storeValue('currentPedidoId', selectedPedidoId);
+        
+        // 2. AWAIT: Forzar la espera a que la consulta termine
+        // Esta es la corrección clave para la condición de carrera.
+        const data = await getPedidoDetalle.run(); 
 
-		return getPedidoDetalle.run()
-			.then(() => {
-				console.log("Datos de getPedidoDetalle:", getPedidoDetalle.data);
-				if (getPedidoDetalle.data && getPedidoDetalle.data.length > 0) {
-					try {
-						let productList = getPedidoDetalle.data[0]?.lista_solicitud;
-						if (typeof productList === 'string') {
-							storeValue('currentProductList', JSON.parse(productList || '[]'));
-						} else {
-							storeValue('currentProductList', productList || []);
-						}
-					} catch (e) {
-						console.error("Error parsing lista_solicitud:", e);
-						storeValue('currentProductList', []);
-					}
-					console.log("Lista productos en store:", appsmith.store.currentProductList);
-				} else {
-					storeValue('currentProductList', []);
-				}
-			// --- INICIO: LÍNEA AÑADIDA ---
-            resetWidget('selEstadoLote', true); // Resetea el dropdown a su estado inicial (placeholder)
-            // --- FIN: LÍNEA AÑADIDA ---
-			
-				showModal('modDetallePedidoColaborador');
-			})
-			.catch((error) => {
-				console.error("Error al ejecutar getPedidoDetalle:", error);
-				showAlert('Error al cargar los detalles del pedido.', 'error');
-				storeValue('currentProductList', []);
-				showModal('modDetallePedidoColaborador');
-			});
-	},
+        // 3. Verificar si la consulta falló (si 'data' está vacío)
+        if (!data || data.length === 0) {
+            showAlert('Error: No se pudieron cargar los detalles del pedido.', 'error');
+            return; // Detener si no hay datos
+        }
 
+        // 4. Procesar y guardar la lista de productos
+        let productList = data[0]?.lista_solicitud;
+        if (typeof productList === 'string') {
+            await storeValue('currentProductList', JSON.parse(productList || '[]'));
+        } else {
+            await storeValue('currentProductList', productList || []);
+        }
+
+        // 5. Resetear widgets del modal
+        await resetWidget('selEstadoLote', true);
+        await resetWidget('inpNuevoComentario', true);
+
+        // 6. FINALMENTE: Mostrar el modal (ahora que los datos están listos)
+        showModal('modDetallePedidoColaborador');
+
+    } catch (error) {
+        console.error("Error al cargar detalles del pedido:", error);
+        showAlert('Error al cargar los detalles: ' + error.message, 'error');
+    }
+},
 	toggleMisTareasFilter: async () => {
 		// Asume que tienes una forma de obtener el ID del colaborador actual, por ejemplo, de appsmith.user o una query
 		// const currentUserId = tu_query_colaborador_actual.data?.id; 
@@ -333,49 +331,48 @@ calcularNuevoEstadoId: () => {
 },
 
 // Nueva función para manejar todo el proceso de guardado y refresco
+// JS Object: utils - Función: saveProductChangesAndUpdateState (AJUSTADA)
 saveProductChangesAndUpdateState: async () => {
     try {
-        // 1. Ejecuta y ESPERA a que termine de guardar la lista
+        // 1. Guardar la lista (updateListaProductos)
         await updateListaProductos.run();
         console.log("Lista de productos guardada.");
 
-        // 2. Si la lista se guardó bien, calcula el nuevo estado
+        // 2. Calcular el nuevo estado
         const nuevoEstadoId = utils.calcularNuevoEstadoId();
         console.log("Nuevo estado ID calculado:", nuevoEstadoId);
 
-        try {
-            // 3. Ejecuta y ESPERA a que termine de guardar el estado general
-            await updateEstadoPedidoGeneral.run({ newEstadoId: nuevoEstadoId });
-            console.log("Estado general guardado.");
-
-            // 4. Si el estado se guardó bien, AHORA refresca los datos (esperando a cada uno)
-            console.log("Refrescando getPedidoDetalle...");
-            await getPedidoDetalle.run();
-            console.log("Refrescando getPedidosColaborador...");
-            await getPedidosColaborador.run();
-            
-            // --- INICIO: LÓGICA AÑADIDA PARA GRÁFICOS ---
-            console.log("Refrescando getPedidosParaCharts...");
-            await getPedidosParaCharts.run(); // Ejecuta la consulta de datos de gráficos
-            
-            // Fuerza el reseteo de la selección de los gráficos para que se repinten con los nuevos datos
-            // Esto es crucial para que los gráficos reflejen el nuevo estado.
-            await resetWidget("chartAtrasados", true);
-            await resetWidget("chartEnTiempo", true);
-            await resetWidget("chartAmbos", true);
-            // --- FIN: LÓGICA AÑADIDA PARA GRÁFICOS ---
-
-            showAlert('¡Lista y estado guardados correctamente!', 'success');
-
-        } catch (estadoError) {
-            // 5. Manejo de error si falla guardar el estado general
-            console.error("Error al guardar estado general:", estadoError);
-            showAlert('Error al guardar el estado general del pedido.', 'error');
-        }
+        // 3. EJECUCIÓN ASÍNCRONA: Dispara la actualización del estado (sin AWAIT)
+        // Usamos .then() para encadenar las acciones de refresco SÓLO después de que termine.
+        updateEstadoPedidoGeneral.run({ newEstadoId: nuevoEstadoId })
+            .then(async () => {
+                console.log("Estado general actualizado. Refrescando UI...");
+                
+        // 4. Si todo el bloque de arriba fue exitoso, refrescar y mostrar éxito.
+        console.log("Refrescando datos...");
+        await getPedidoDetalle.run();
+        await getPedidosColaborador.run();
+        await getPedidosParaCharts.run();
+        
+        // Forzar reseteo de gráficos para actualizar visualmente
+        // SOLO usamos los nombres correctos que existen actualmente.
+        await resetWidget("chartAtrasados", true);
+        await resetWidget("chartEnTiempo", true);
+        await resetWidget("Chart3", true); // <-- Agregamos Chart3 (Pendientes por Colaborador)
+        await resetWidget("chartPorCobrar", true); // <-- Agregamos chartPorCobrar
+        
+        showAlert('¡Lista y estado guardados correctamente!', 'success');
+            })
+            .catch((estadoError) => {
+                // Capturamos el error solo si la promesa del updateEstadoPedidoGeneral falla
+                console.error("Error al actualizar el estado general (Promesa Rota):", estadoError);
+                // NOTA: Dejamos el mensaje de error para debug, pero generalmente, en este punto el dato ya se guardó.
+                showAlert('Error al guardar el estado general del pedido.', 'error');
+            });
 
     } catch (listaError) {
-        // 6. Manejo de error si falla guardar la lista inicial
-        console.error("Error al guardar lista productos:", listaError);
+        // 5. Manejar error en el guardado de la lista
+        console.error("Error al guardar la lista de productos:", listaError);
         showAlert('Error al guardar la lista de productos.', 'error');
     }
 },
@@ -420,25 +417,47 @@ updateEstadoItemsLote: () => {
         showModal('modVerComentario');
     },
 
-// MODIFICAR FIRMA: La función ahora acepta estado y fecha
-getEstadoIndicador: (estadoInterno, fechaPlazoStr) => { 
-    // 1. Lógica para determinar el orden (necesitas obtener el orden_visual)
+// ESTA ES LA FUNCIÓN PARA EL MODAL (LEE getPedidoDetalle)
+// ESTA ES LA FUNCIÓN PARA EL MODAL (LEE getPedidoDetalle)
+getEstadoIndicador: () => {
     const estados = getEstadosOrdenados.data;
-    const estadoActual = estados.find(e => e.estado_interno === estadoInterno);
-    const orden = estadoActual ? estadoActual.orden_visual : -1;
+    const pedido = getPedidoDetalle.data; // Lee los datos del modal
 
-    // 2. Lógica de Plazo (similar a la original)
-    if (orden > 9) return { text: "Entregado", color: "GREEN" };
-    if (orden === 0) return { text: "Cancelado", color: "#6B7280" };
+    if (!pedido || !pedido.length || !estados || !estados.length) {
+        return { text: "Cargando...", color: "#6B7280" }; 
+    }
+
+    const estadoIdCalculado = utils.calcularNuevoEstadoId(); 
+    const estadoActual = estados.find(e => e.id === estadoIdCalculado);
+    
+    if (!estadoActual) {
+        return { text: "Sin Estado", color: "#6B7280" };
+    }
+    
+    const orden = estadoActual.orden_visual; 
+
+    // IDs 9 (entregado), 10 (finalizado)
+    if (orden >= 9) { 
+        return { text: "Finalizado/Entregado", color: "#22C55E" }; // Verde
+    }
+    // ID 11 (cancelado)
+    if (orden === 0 || orden === 11) { 
+        return { text: "Cancelado", color: "#6B7280" }; // Gris
+    }
+
+    const fechaPlazoStr = pedido[0].fecha_plazo;
+    if (!fechaPlazoStr) {
+         return { text: "Plazo N/A", color: "#6B7280" };
+    }
 
     const fechaPlazo = moment(fechaPlazoStr);
     const fechaActual = moment(); 
-
+    
     if (fechaPlazo.isBefore(fechaActual)) {
-        return { text: "Retrasado", color: "#b91c1c" };
+        return { text: "Retrasado", color: "#b91c1c" }; // Rojo
     }
-
-    return { text: "En Tiempo", color: "#553DE9" }; // Usando "En Tiempo"
+    
+    return { text: "En Tiempo", color: "#553DE9" }; // Azul/Púrpura
 },
 	
 resetFiltroMisTareas: async () => {
@@ -447,17 +466,144 @@ resetFiltroMisTareas: async () => {
 },
 
 onPageLoadLogic: async () => {
-    // 1. Limpieza forzada del filtro fantasma (clave para ver todos los registros)
-    await storeValue('filtroMisTareasActivo', false); 
+        // 1. Limpieza de filtro fantasma
+        await storeValue('filtroMisTareasActivo', false);
 
-    // 2. Ejecuta las consultas de datos maestros (deben estar con "Run on Page Load" en OFF)
-    // Ejecutar getColaboradores es vital, ya que contiene el On Success que dispara otros flujos en el JSON original
-    await getColaboradores.run(); 
-    await getClientes_filtro.run();
-    await getEstadosOrdenados.run();
-    await getSubdepartamentos.run();
+        // 2. Ejecuta consulta de ID de usuario
+        await getCurrentColaboradorId.run(); 
 
-    // 3. Ejecuta la consulta principal de pedidos (debe estar con "Run on Page Load" en OFF)
-    await getPedidosColaborador.run();
+        // 3. Ejecuta las consultas de datos maestros (filtros desplegables)
+        await getColaboradores.run(); 
+        await getClientes_filtro.run(); 
+        await getEstadosOrdenados.run();
+        await getSubdepartamentos.run();
+
+        // 4. Ejecuta las consultas de gráficos y la tabla principal
+        await getPedidosPendientesPorColabor.run();
+        await getPedidosFlujoMedio.run(); // (Si aún la usas)
+        await getPedidosParaCharts.run();
+        await getPedidosPorCobrar.run();
+        await getPedidosColaborador.run(); 
+    },
+
+getFlujoMedioData: () => {
+    const data = getPedidosFlujoMedio.data;
+    if (!data || data.length === 0) return [];
+
+    // --- El cálculo de color DEBE hacerse por fila (dentro del .map) ---
+    return data.map(row => {
+        
+        // 1. Lógica de cálculo de color (Trasladada aquí)
+        const minOrder = 3;
+        const maxOrder = 9;
+        const visualOrder = row.visual_order; // Asumiendo que row.visual_order es tu campo
+        
+        // Normaliza el orden de 0 a 1 
+        const normalized = (visualOrder - minOrder) / (maxOrder - minOrder);
+        
+        // Calcula el color RGB (rojo a verde)
+        const r = Math.round(255 * (1 - normalized));
+        const g = Math.round(255 * normalized);
+        const b = 0;
+        
+        // Define la variable 'color' que estaba dando error
+        const color = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+        
+        return {
+            label: row.state_name, 
+            // CRÍTICO: Asegura el valor numérico para el Pie Chart
+            value: parseInt(row.order_count), 
+            color: color // <--- Ahora 'color' está definido aquí
+        };
+    });
+},
+
+// ESTA ES LA FUNCIÓN PARA LA TABLA (USA currentRow)
+// ESTA ES LA FUNCIÓN PARA LA TABLA (USA currentRow)
+getIndicadorParaTabla: (estadoInterno, fechaPlazoStr) => { 
+    const estados = getEstadosOrdenados.data;
+
+    if (!estados || !estados.length) {
+        return { text: "Cargando...", color: "#6B7280" };
+    }
+
+    const estadoActual = estados.find(e => e.estado_interno === estadoInterno);
+    const orden = estadoActual ? estadoActual.orden_visual : -1;
+    
+    if (!estadoActual) {
+        return { text: "Sin Estado", color: "#6B7280" };
+    }
+
+    if (orden >= 9) { // 9=entregado, 10=finalizado
+        return { text: "Finalizado", color: "#15803d" };
+    }
+    if (orden === 0 || orden === 11) { // 11=cancelado
+        return { text: "Cancelado", color: "#6B7280" };
+    }
+    if (!fechaPlazoStr) {
+         return { text: "Plazo N/A", color: "#6B7280" };
+    }
+    const fechaPlazo = moment(fechaPlazoStr);
+    const fechaActual = moment(); 
+    
+    if (fechaPlazo.isBefore(fechaActual)) {
+        return { text: "Retrasado", color: "#b91c1c" };
+    }
+    
+    return { text: "En Tiempo", color: "#553DE9" };
+},
+	
+	// JS Object: utils
+// AÑADE ESTA FUNCIÓN AL FINAL DE TU JS OBJECT 'UTILS'
+
+// JS Object: utils - Función: procesarDataPedidos (SECCIÓN CORREGIDA)
+// JS Object: utils - Función: procesarDataPedidos (CORREGIDA Y COMPLETA)
+procesarDataPedidos: () => {
+    return getPedidosColaborador.data.map(pedido => {
+        // --- CÓDIGO DE PARSING RESTAURADO ---
+        let items = pedido.lista_solicitud;
+
+        // 1. Asegurarse de que 'items' sea un array (maneja strings JSONB y null)
+        try {
+            items = (typeof items === 'string') ? JSON.parse(items || '[]') : items || [];
+        } catch (e) {
+            items = [];
+        }
+        // --- FIN DEL CÓDIGO DE PARSING ---
+
+
+        // --- Agregación y Conteo (CORRECCIÓN CLAVE) ---
+        const aggregation = {}; 
+        if (Array.isArray(items) && items.length > 0) {
+            items.forEach(item => {
+                const estado = item.estado_item || 'sin_estado'; 
+                
+                if (!aggregation[estado]) {
+                    aggregation[estado] = 0;
+                }
+                // ¡CONTAR ITEM (SUMAR 1) — Solución anterior!
+                aggregation[estado] += 1; 
+            });
+        }
+
+       // --- Formato de Salida HTML (CORREGIDO) ---
+        const outputLines = Object.keys(aggregation).map(estado => {
+            const totalItems = aggregation[estado];
+            // Cambiar a minúsculas:
+            const label = totalItems === 1 ? 'artículo' : 'artículos';
+            
+            // Color fijo NEGRO, ignorando la lógica previa
+            const color = 'black'; 
+            
+            // La etiqueta final ahora es: "artículo(s) [estado]"
+            return `<span style="color: ${color};"><b>${totalItems} ${label}</b> ${estado}</span>`;
+        });
+        
+        // 2. Devolver el pedido original con el campo de resumen
+        return {
+            ...pedido,
+            productos_resumen: outputLines.length === 0 ? '<span style="color: grey;">- Vacío -</span>' : outputLines.join('<br>')
+        };
+    });
 }
 }

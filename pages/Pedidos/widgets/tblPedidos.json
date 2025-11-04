@@ -4,7 +4,7 @@
   "borderColor": "#E0DEDE",
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
   "borderWidth": "1",
-  "bottomRow": 85,
+  "bottomRow": 264,
   "boxShadow": "{{appsmith.theme.boxShadow.appBoxShadow}}",
   "cachedTableData": {},
   "canFreezeColumn": true,
@@ -43,17 +43,18 @@
     "nombre_asignado",
     "subdepto_responsable",
     "cliente_wa",
-    "descripcion_cliente"
+    "descripcion_cliente",
+    "productos_resumen"
   ],
-  "columnUpdatedAt": 1762060358302,
+  "columnUpdatedAt": 1762299233810,
   "columnWidthMap": {
     "created_at": 170,
     "customColumn1": 148,
     "estado_interno": 163,
-    "fecha_plazo": 148,
+    "fecha_plazo": 82,
     "id": 144,
     "id_compra_cliente": 167,
-    "lista_solicitud": 166,
+    "lista_solicitud": 275,
     "nombre_asignado": 152,
     "nombre_cliente": 156,
     "subdepto_responsable": 127
@@ -76,9 +77,6 @@
     },
     {
       "key": "boxShadow"
-    },
-    {
-      "key": "tableData"
     },
     {
       "key": "primaryColumns.id.computedValue"
@@ -118,6 +116,12 @@
     },
     {
       "key": "primaryColumns.customColumn1.cellBackground"
+    },
+    {
+      "key": "tableData"
+    },
+    {
+      "key": "primaryColumns.productos_resumen.computedValue"
     }
   ],
   "dynamicPropertyPathList": [
@@ -153,7 +157,7 @@
   "isVisibleSearch": true,
   "key": "dc6uze6fb4",
   "label": "Data",
-  "leftColumn": 1,
+  "leftColumn": 0,
   "minWidth": 450,
   "mobileBottomRow": 62,
   "mobileLeftColumn": 13,
@@ -236,9 +240,9 @@
       "allowCellWrapping": false,
       "allowSameOptionsInNewRow": true,
       "buttonStyle": "rgb(3, 179, 101)",
-      "cellBackground": "{{(() => { const tableData = tblPedidos.processedTableData || []; return tableData.length > 0 ? tableData.map((currentRow, currentIndex) => ( utils.getEstadoIndicador(currentRow.estado_interno, currentRow.fecha_plazo).color )) :  utils.getEstadoIndicador(currentRow.estado_interno, currentRow.fecha_plazo).color  })()}}",
+      "cellBackground": "{{(() => { const tableData = tblPedidos.processedTableData || []; return tableData.length > 0 ? tableData.map((currentRow, currentIndex) => ( utils.getIndicadorParaTabla(currentRow.estado_interno, currentRow.fecha_plazo).color )) :  utils.getIndicadorParaTabla(currentRow.estado_interno, currentRow.fecha_plazo).color  })()}}",
       "columnType": "text",
-      "computedValue": "{{(() => { const tableData = tblPedidos.processedTableData || []; return tableData.length > 0 ? tableData.map((currentRow, currentIndex) => ( utils.getEstadoIndicador(currentRow.estado_interno, currentRow.fecha_plazo).text )) :  utils.getEstadoIndicador(currentRow.estado_interno, currentRow.fecha_plazo).text  })()}}",
+      "computedValue": "{{(() => { const tableData = tblPedidos.processedTableData || []; return tableData.length > 0 ? tableData.map((currentRow, currentIndex) => ( utils.getIndicadorParaTabla(currentRow.estado_interno, currentRow.fecha_plazo).text )) :  utils.getIndicadorParaTabla(currentRow.estado_interno, currentRow.fecha_plazo).text  })()}}",
       "currencyCode": "USD",
       "customAlias": "",
       "decimals": 0,
@@ -431,7 +435,7 @@
       "allowSameOptionsInNewRow": true,
       "buttonLabel": "Ver Productos",
       "columnType": "html",
-      "computedValue": "{{(() => { const tableData = tblPedidos.processedTableData || []; return tableData.length > 0 ? tableData.map((currentRow, currentIndex) => (\n  (() => {\n    const items = currentRow.lista_solicitud;\n    let count = 0;\n\n    // Caso 1: La lista ya es un array\n    if (Array.isArray(items)) {\n      count = items.length;\n    } \n    // Caso 2: La lista es una cadena JSON (o nula)\n    else {\n      try {\n        const parsedItems = JSON.parse(items || '[]');\n        count = Array.isArray(parsedItems) ? parsedItems.length : 0;\n      } catch (e) {\n        return 'Error (JSON)';\n      }\n    }\n    \n    // Devolver el conteo con la palabra \"PRODUCTOS\" (singular/plural)\n    return `${count} Articulo${count !== 1 ? 's' : ''}`;\n  })()\n)) : \n  (() => {\n    const items = currentRow.lista_solicitud;\n    let count = 0;\n\n    // Caso 1: La lista ya es un array\n    if (Array.isArray(items)) {\n      count = items.length;\n    } \n    // Caso 2: La lista es una cadena JSON (o nula)\n    else {\n      try {\n        const parsedItems = JSON.parse(items || '[]');\n        count = Array.isArray(parsedItems) ? parsedItems.length : 0;\n      } catch (e) {\n        return 'Error (JSON)';\n      }\n    }\n    \n    // Devolver el conteo con la palabra \"PRODUCTOS\" (singular/plural)\n    return `${count} Articulo${count !== 1 ? 's' : ''}`;\n  })()\n })()}}",
+      "computedValue": "{{(() => { const tableData = tblPedidos.processedTableData || []; return tableData.length > 0 ? tableData.map((currentRow, currentIndex) => ( currentRow.productos_resumen )) :  currentRow.productos_resumen  })()}}",
       "currencyCode": "USD",
       "customAlias": "",
       "decimals": 0,
@@ -521,6 +525,40 @@
       "verticalAlignment": "CENTER",
       "width": 150
     },
+    "productos_resumen": {
+      "alias": "productos_resumen",
+      "allowCellWrapping": false,
+      "allowSameOptionsInNewRow": true,
+      "cellBackground": "",
+      "columnType": "html",
+      "computedValue": "{{(() => { const tableData = tblPedidos.processedTableData || []; return tableData.length > 0 ? tableData.map((currentRow, currentIndex) => (currentRow[\"productos_resumen\"])) : productos_resumen })()}}",
+      "currencyCode": "USD",
+      "decimals": 0,
+      "enableFilter": true,
+      "enableSort": true,
+      "fontStyle": "",
+      "horizontalAlignment": "LEFT",
+      "id": "productos_resumen",
+      "index": 11,
+      "isCellEditable": false,
+      "isCellVisible": true,
+      "isDerived": false,
+      "isDisabled": false,
+      "isDiscardVisible": true,
+      "isEditable": false,
+      "isSaveVisible": true,
+      "isVisible": true,
+      "label": "productos_resumen",
+      "notation": "standard",
+      "originalId": "productos_resumen",
+      "sticky": "",
+      "textColor": "",
+      "textSize": "0.875rem",
+      "thousandSeparator": true,
+      "validation": {},
+      "verticalAlignment": "CENTER",
+      "width": 150
+    },
     "subdepto_responsable": {
       "alias": "subdepto_responsable",
       "allowCellWrapping": false,
@@ -555,16 +593,16 @@
   },
   "renderMode": "CANVAS",
   "responsiveBehavior": "fill",
-  "rightColumn": 64,
+  "rightColumn": 63,
   "searchKey": "",
   "serverSidePaginationEnabled": false,
-  "tableData": "{{getPedidosColaborador.data}}",
+  "tableData": "{{ utils.procesarDataPedidos() }}",
   "textSize": "0.875rem",
-  "topRow": 44,
+  "topRow": 45,
   "totalRecordsCount": 0,
   "type": "TABLE_WIDGET_V2",
   "version": 2,
   "verticalAlignment": "CENTER",
-  "widgetId": "uorbrejocj",
+  "widgetId": "2sm6j8onyp",
   "widgetName": "tblPedidos"
 }

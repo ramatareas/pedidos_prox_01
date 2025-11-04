@@ -1,0 +1,13 @@
+SELECT
+    col.nombre AS collaborator_name,
+    COUNT(p.id) AS order_count
+FROM
+    pedidos p
+JOIN
+    colaboradores col ON p.asignado_a_id = col.id
+WHERE
+    p.estado_id IN (1, 2) -- <--- CORRECCIÓN AQUÍ (ID 1 y 2)
+GROUP BY
+    col.nombre
+ORDER BY
+    order_count DESC;

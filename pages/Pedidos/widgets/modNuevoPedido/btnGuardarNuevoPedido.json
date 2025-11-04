@@ -37,7 +37,7 @@
   "mobileRightColumn": 63,
   "mobileTopRow": 18,
   "needsErrorInfo": false,
-  "onClick": "{{\n(async () => {\n    await insertNuevoPedido.run();\n\n    // 1. Ejecuta la consulta de la tabla principal\n    await getPedidosColaborador.run(); \n\n    // 2. Ejecuta la consulta de los gráficos (CRÍTICO)\n    await getPedidosParaCharts.run();\n\n    // 3. Forzar un repintado/reseteo de los gráficos después de la actualización (opcional, pero recomendado)\n    await resetWidget(\"chartAtrasados\", true);\n    await resetWidget(\"chartEnTiempo\", true);\n    await resetWidget(\"chartAmbos\", true);\n\n    // 4. Cierra el modal y notifica\n    closeModal(modNuevoPedido.name);\n    showAlert('Pedido creado con éxito.', 'success');\n})();\n}}",
+  "onClick": "{{\n(async () => {\n    await insertNuevoPedido.run();\n\n    // 1. Ejecuta la consulta de la tabla principal\n    await getPedidosColaborador.run(); \n\n    // 2. Ejecuta la consulta de los gráficos (CRÍTICO)\n    await getPedidosParaCharts.run();\n\n    // 3. Forzar un repintado/reseteo de los gráficos después de la actualización (opcional, pero recomendado)\n    await resetWidget(\"chartAtrasados\", true);\n    await resetWidget(\"chartEnTiempo\", true);\n    await resetWidget(\"Chart3\", true);\n\t    await resetWidget(\"chartPorCobrar\", true);\n\n    // 4. Cierra el modal y notifica\n    closeModal(modNuevoPedido.name);\n    showAlert('Pedido creado con éxito.', 'success');\n})();\n}}",
   "parentId": "pc740tbkfx",
   "placement": "CENTER",
   "recaptchaType": "V3",

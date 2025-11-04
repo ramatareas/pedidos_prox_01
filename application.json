@@ -36,6 +36,10 @@
     {
       "id": "Editar clientes",
       "isDefault": false
+    },
+    {
+      "id": "Pedidos Copy",
+      "isDefault": false
     }
   ],
   "unpublishedAppLayout": {

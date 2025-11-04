@@ -1,3 +1,4 @@
 UPDATE public.pedidos 
-SET estado_id = {{ this.params.newEstadoId }} 
-WHERE id = {{ appsmith.store.currentPedidoId }};
+SET estado_id = {{ this.params.newEstadoId }}::integer -- <--- CAMBIO CLAVE AQUÍ
+WHERE id = {{ appsmith.store.currentPedidoId }}
+RETURNING id;

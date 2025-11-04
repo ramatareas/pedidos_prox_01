@@ -12,7 +12,7 @@
       "seriesName": ""
     }
   },
-  "chartName": "Pedidos Atrasados",
+  "chartName": "{{ \"Atrasados (\" + chartUtils.prepararDatos().dataAtrasados.reduce((acc, item) => acc + item.y, 0) + \")\" }}",
   "chartType": "BAR_CHART",
   "customEChartConfig": "{{\n{\n  \"dataset\": {\n    \"source\": [\n      [\n        \"Day\",\n        \"Baidu\",\n        \"Google\",\n        \"Bing\"\n      ],\n      [\n        \"Mon\",\n        620,\n        120,\n        60\n      ],\n      [\n        \"Tue\",\n        732,\n        132,\n        72\n      ],\n      [\n        \"Wed\",\n        701,\n        101,\n        71\n      ],\n      [\n        \"Thu\",\n        734,\n        134,\n        74\n      ],\n      [\n        \"Fri\",\n        1090,\n        290,\n        190\n      ],\n      [\n        \"Sat\",\n        1130,\n        230,\n        130\n      ],\n      [\n        \"Sun\",\n        1120,\n        220,\n        110\n      ]\n    ]\n  },\n  \"tooltip\": {\n    \"trigger\": \"axis\",\n    \"axisPointer\": {\n      \"type\": \"shadow\"\n    }\n  },\n  \"title\": {\n    \"text\": \"Search Engine Usage\",\n    \"left\": \"center\",\n    \"textStyle\": {\n      \"width\": 200,\n      \"overflow\": \"truncate\"\n    }\n  },\n  \"legend\": {\n    \"top\": 40,\n    \"type\": \"scroll\"\n  },\n  \"grid\": {\n    \"left\": 15,\n    \"right\": 15,\n    \"bottom\": 30,\n    \"top\": 100,\n    \"containLabel\": true\n  },\n  \"xAxis\": [\n    {\n      \"type\": \"category\"\n    }\n  ],\n  \"yAxis\": [\n    {\n      \"type\": \"value\"\n    }\n  ],\n  \"series\": [\n    {\n      \"type\": \"bar\",\n      \"stack\": \"Search Engine\"\n    },\n    {\n      \"type\": \"bar\",\n      \"stack\": \"Search Engine\"\n    },\n    {\n      \"type\": \"bar\",\n      \"stack\": \"Search Engine\"\n    }\n  ]\n}\n}}",
   "customFusionChartConfig": {
@@ -77,6 +77,9 @@
     },
     {
       "key": "chartData.mzl5xmbhvx.data"
+    },
+    {
+      "key": "chartName"
     }
   ],
   "dynamicPropertyPathList": [
@@ -95,26 +98,26 @@
   "isVisible": true,
   "key": "icjtvmyk80",
   "labelOrientation": "auto",
-  "leftColumn": 1,
+  "leftColumn": 0,
   "minWidth": 450,
   "mobileBottomRow": 31,
   "mobileLeftColumn": 0,
   "mobileRightColumn": 12,
   "mobileTopRow": 0,
   "needsErrorInfo": true,
-  "onDataPointClick": "{{\n(async () => {\n    // Resetea los otros gráficos\n    await resetWidget(\"chartEnTiempo\", true);\n    await resetWidget(\"chartAmbos\", true);\n\n    // Resetea TODOS los filtros desplegables\n    await resetWidget(\"selEstado\", true);\n    await resetWidget(\"selCliente_filtro\", true);\n    await resetWidget(\"selAsignadoA_filtro\", true);\n\n    // Ejecuta la consulta\n    await getPedidosColaborador.run();\n})();\n}}",
+  "onDataPointClick": "{{ (async () => {\n    await resetWidget(\"chartEnTiempo\", true); await resetWidget(\"Chart3\", true); await resetWidget(\"chartPorCobrar\", true);\n    await resetWidget(\"selEstado\", true); await resetWidget(\"selCliente_filtro\", true); await resetWidget(\"selAsignadoA_filtro\", true);\n    await getPedidosColaborador.run();\n})(); }}",
   "parentColumnSpace": 23.390625,
   "parentId": "0",
   "parentRowSpace": 10,
   "renderMode": "CANVAS",
   "responsiveBehavior": "fill",
-  "rightColumn": 21,
+  "rightColumn": 16,
   "showDataPointLabel": true,
-  "topRow": 1,
+  "topRow": 0,
   "type": "CHART_WIDGET",
   "version": 1,
   "widgetId": "zodtsyk30n",
   "widgetName": "chartAtrasados",
   "xAxisName": "",
-  "yAxisName": ""
+  "yAxisName": "Etapa"
 }

@@ -1,0 +1,14 @@
+SELECT
+    me.estado_interno AS state_name,
+    me.orden_visual AS visual_order,
+    COUNT(p.id) AS order_count
+FROM
+    pedidos p
+JOIN
+    maestro_estados me ON p.estado_id = me.id
+WHERE
+    me.orden_visual >= 3 AND me.orden_visual <= 9
+GROUP BY
+    me.estado_interno, me.orden_visual
+ORDER BY
+    me.orden_visual ASC;

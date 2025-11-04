@@ -7,5 +7,5 @@ FROM
 JOIN 
     maestro_estados me ON p.estado_id = me.id
 WHERE 
-    -- Excluye los IDs de estado 10 (Finalizado) y 11 (Cancelado)
-    p.estado_id NOT IN (10, 11)
+    -- Excluye los IDs de estado 9 (entregado), 10 (finalizado) y 11 (cancelado)
+    p.estado_id NOT IN (9, 10, 11)

@@ -5,12 +5,12 @@
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "UPDATE public.pedidos \nSET estado_id = {{ this.params.newEstadoId }} \nWHERE id = {{ appsmith.store.currentPedidoId }};",
+      "body": "UPDATE public.pedidos \nSET estado_id = {{ this.params.newEstadoId }}::integer -- <--- CAMBIO CLAVE AQUÍ\nWHERE id = {{ appsmith.store.currentPedidoId }}\nRETURNING id;",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [
         {
-          "value": false
+          "value": true
         }
       ],
       "timeoutInMillisecond": 10000

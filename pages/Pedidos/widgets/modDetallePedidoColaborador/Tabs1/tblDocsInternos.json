@@ -102,6 +102,7 @@
   "mobileLeftColumn": 17,
   "mobileRightColumn": 51,
   "mobileTopRow": 14,
+  "multiRowSelection": false,
   "needsErrorInfo": false,
   "originalBottomRow": 52,
   "originalTopRow": 16,

@@ -1,0 +1,3 @@
+SELECT id 
+FROM colaboradores 
+WHERE email = '{{ appsmith.user.email }}';

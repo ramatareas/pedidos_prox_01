@@ -1,0 +1,13 @@
+SELECT
+    c.nombre AS customer_name,
+    COUNT(p.id) AS order_count
+FROM
+    pedidos p
+JOIN
+    clientes c ON p.cliente_id = c.id
+WHERE
+    p.estado_id = 9 -- ID 9 = 'entregado'
+GROUP BY
+    c.nombre
+ORDER BY
+    order_count DESC;
