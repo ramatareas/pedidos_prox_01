@@ -4,7 +4,7 @@
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
   "bottomRow": 5,
   "boxShadow": "none",
-  "defaultOptionValue": "{{ ((options, serverSideFiltering) => (  getPedidoDetalle.data[0]?.asignado_a_id ))(selAsignadoA.options, selAsignadoA.serverSideFiltering) }}",
+  "defaultOptionValue": "{{ ((options, serverSideFiltering) => (  getPedidoDetalle.data[0]?.cliente_id?.toString() ))(selClienteCambio.options, selClienteCambio.serverSideFiltering) }}",
   "dynamicBindingPathList": [
     {
       "key": "accentColor"
@@ -35,11 +35,11 @@
   "labelAlignment": "left",
   "labelPosition": "Top",
   "labelStyle": "BOLD",
-  "labelText": "Asignado a:",
+  "labelText": "Cliente:",
   "labelTextColor": "#cf4d10",
   "labelTextSize": "0.875rem",
   "labelWidth": 5,
-  "leftColumn": 10,
+  "leftColumn": 42,
   "maxDynamicHeight": 9000,
   "minDynamicHeight": 4,
   "minWidth": 450,
@@ -53,15 +53,15 @@
   "parentColumnSpace": 21.55216064453125,
   "parentId": "8ppt5lb1m4",
   "parentRowSpace": 10,
-  "placeholderText": "Select option",
+  "placeholderText": "",
   "renderMode": "CANVAS",
   "responsiveBehavior": "fill",
-  "rightColumn": 21,
+  "rightColumn": 52,
   "serverSideFiltering": false,
-  "sourceData": "{{ getColaboradores.data.map(col => ({ label: col.nombre, value: col.id })) }}",
+  "sourceData": "{{\n  getClientes_filtro.data.map(c => ({ \n    label: c.nombre, \n    value: c.id.toString() // <-- CAMBIO CLAVE: CONVERTIR EL ID A CADENA AQUÍ\n  }))\n}}",
   "topRow": 1,
   "type": "SELECT_WIDGET",
   "version": 1,
-  "widgetId": "tpqk0wck3a",
-  "widgetName": "selAsignadoA"
+  "widgetId": "xaqoqwr800",
+  "widgetName": "selClienteCambio"
 }

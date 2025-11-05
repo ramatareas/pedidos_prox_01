@@ -11,18 +11,20 @@ export default {
         // --- PRIORIDAD 1: FILTRO DE GRÁFICOS ---
         
         if (!!pieChartX) {
-            // Chart3: Pedidos Pendientes/Cotizados por Colaborador
-            const colaborador = getColaboradores.data.find(c => c.nombre === pieChartX);
-            const colaboradorId = colaborador?.id;
+            // Chart3: Pedidos por Etapa (solo 1 y 2)
+            
+            // Buscar el ID del estado seleccionado
+            const estado = getEstadosOrdenados.data.find(e => e.estado_interno === pieChartX);
+            const estadoId = estado?.id;
 
-            if (colaboradorId) {
-                // CORRECCIÓN: Añadir ::integer para forzar el tipo
-                conditions.push(`p.asignado_a_id = ${colaboradorId}::integer`);
-                conditions.push(`p.estado_id = 1`); 
+            if (estadoId) {
+                // Filtra por el ID del estado seleccionado
+                conditions.push(`p.estado_id = ${estadoId}::integer`);
             } else {
-                conditions.push(`p.asignado_a_id = 0`); // Sin resultados
+                // Si la etapa no existe, no mostrar nada.
+                conditions.push(`p.estado_id = 0`); 
             }
-        } 
+        }
         
         else if (!!porCobrarX) {
             // ChartPorCobrar: Pedidos Entregados por Cliente

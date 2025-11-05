@@ -5,7 +5,7 @@
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "SELECT\n    col.nombre AS collaborator_name,\n    COUNT(p.id) AS order_count\nFROM\n    pedidos p\nJOIN\n    colaboradores col ON p.asignado_a_id = col.id\nWHERE\n    p.estado_id = 1 -- <--- CORRECCIÓN AQUÍ (ID 1 y 2)\nGROUP BY\n    col.nombre\nORDER BY\n    order_count DESC;",
+      "body": "-- Query: getPedidosPendientesPorColabor (NUEVA LÓGICA: Contar por ESTADO)\nSELECT\n    me.estado_interno AS estado_etapa, -- Usamos el nombre interno para el gráfico\n    COUNT(p.id) AS order_count\nFROM\n    pedidos p\nJOIN\n    maestro_estados me ON p.estado_id = me.id\nWHERE\n    p.estado_id IN (1, 2) -- <--- FILTRAR SOLO ESTADOS 1 (pendiente_cotizacion) y 2 (cotizacion_enviada)\nGROUP BY\n    me.estado_interno\nORDER BY\n    COUNT(p.id) DESC;",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [

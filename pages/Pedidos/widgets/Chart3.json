@@ -8,11 +8,11 @@
   "chartData": {
     "rrfertibtk": {
       "color": "#eab308",
-      "data": "{{ \ngetPedidosPendientesPorColabor.data\n  // 1. Forzamos el ordenamiento ASCENDENTE (de B a A) en JavaScript\n  .sort((b, a) => parseInt(b.order_count) - parseInt(a.order_count))\n\n  // 2. Mapeamos al formato {x, y}\n  .map(row => ({\n    x: row.collaborator_name,      \n    y: parseInt(row.order_count) \n})) \n}}",
+      "data": "{{ \ngetPedidosPendientesPorColabor.data\n  // 1. Opcional: Mantenemos el ordenamiento por conteo (de menor a mayor)\n  .sort((a, b) => parseInt(a.order_count) - parseInt(b.order_count)) \n  \n  // 2. Mapeamos al formato {x, y}\n  .map(row => ({\n    // x: Ahora usamos el nuevo campo 'estado_etapa'\n    x: row.estado_etapa,  \n    // y: Mantenemos el conteo\n    y: parseInt(row.order_count) \n})) \n}}",
       "seriesName": ""
     }
   },
-  "chartName": "{{ \"Por Cotizar (\" + getPedidosPendientesPorColabor.data.reduce((acc, row) => acc + parseInt(row.order_count), 0) + \")\" }}",
+  "chartName": "{{ \"Por Aprobar (\" + getPedidosPendientesPorColabor.data.reduce((acc, row) => acc + parseInt(row.order_count), 0) + \")\" }}",
   "chartType": "BAR_CHART",
   "customEChartConfig": "{{\n{\n  \"dataset\": {\n    \"source\": [\n      [\n        \"Day\",\n        \"Baidu\",\n        \"Google\",\n        \"Bing\"\n      ],\n      [\n        \"Mon\",\n        620,\n        120,\n        60\n      ],\n      [\n        \"Tue\",\n        732,\n        132,\n        72\n      ],\n      [\n        \"Wed\",\n        701,\n        101,\n        71\n      ],\n      [\n        \"Thu\",\n        734,\n        134,\n        74\n      ],\n      [\n        \"Fri\",\n        1090,\n        290,\n        190\n      ],\n      [\n        \"Sat\",\n        1130,\n        230,\n        130\n      ],\n      [\n        \"Sun\",\n        1120,\n        220,\n        110\n      ]\n    ]\n  },\n  \"tooltip\": {\n    \"trigger\": \"axis\",\n    \"axisPointer\": {\n      \"type\": \"shadow\"\n    }\n  },\n  \"title\": {\n    \"text\": \"Search Engine Usage\",\n    \"left\": \"center\",\n    \"textStyle\": {\n      \"width\": 200,\n      \"overflow\": \"truncate\"\n    }\n  },\n  \"legend\": {\n    \"top\": 40,\n    \"type\": \"scroll\"\n  },\n  \"grid\": {\n    \"left\": 15,\n    \"right\": 15,\n    \"bottom\": 30,\n    \"top\": 100,\n    \"containLabel\": true\n  },\n  \"xAxis\": [\n    {\n      \"type\": \"category\"\n    }\n  ],\n  \"yAxis\": [\n    {\n      \"type\": \"value\"\n    }\n  ],\n  \"series\": [\n    {\n      \"type\": \"bar\",\n      \"stack\": \"Search Engine\"\n    },\n    {\n      \"type\": \"bar\",\n      \"stack\": \"Search Engine\"\n    },\n    {\n      \"type\": \"bar\",\n      \"stack\": \"Search Engine\"\n    }\n  ]\n}\n}}",
   "customFusionChartConfig": {
@@ -76,10 +76,10 @@
       "key": "fontFamily"
     },
     {
-      "key": "chartData.rrfertibtk.data"
+      "key": "chartName"
     },
     {
-      "key": "chartName"
+      "key": "chartData.rrfertibtk.data"
     }
   ],
   "dynamicPropertyPathList": [
@@ -119,5 +119,5 @@
   "widgetId": "e15tywckiv",
   "widgetName": "Chart3",
   "xAxisName": "",
-  "yAxisName": "Colaborador"
+  "yAxisName": "Etapa"
 }

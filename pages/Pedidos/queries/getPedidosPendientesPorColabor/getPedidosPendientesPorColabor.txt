@@ -1,13 +1,14 @@
+-- Query: getPedidosPendientesPorColabor (NUEVA LÓGICA: Contar por ESTADO)
 SELECT
-    col.nombre AS collaborator_name,
+    me.estado_interno AS estado_etapa, -- Usamos el nombre interno para el gráfico
     COUNT(p.id) AS order_count
 FROM
     pedidos p
 JOIN
-    colaboradores col ON p.asignado_a_id = col.id
+    maestro_estados me ON p.estado_id = me.id
 WHERE
-    p.estado_id = 1 -- <--- CORRECCIÓN AQUÍ (ID 1 y 2)
+    p.estado_id IN (1, 2) -- <--- FILTRAR SOLO ESTADOS 1 (pendiente_cotizacion) y 2 (cotizacion_enviada)
 GROUP BY
-    col.nombre
+    me.estado_interno
 ORDER BY
-    order_count DESC;
+    COUNT(p.id) DESC;
