@@ -8,7 +8,7 @@
   "chartData": {
     "mzl5xmbhvx": {
       "color": "#b91c1c",
-      "data": "{{ chartUtils.prepararDatos().dataAtrasados }}",
+      "data": "{{ \n\nchartUtils.prepararDatos().dataAtrasados }}",
       "seriesName": ""
     }
   },

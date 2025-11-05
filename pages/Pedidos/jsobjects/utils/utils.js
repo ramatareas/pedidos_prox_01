@@ -334,46 +334,47 @@ calcularNuevoEstadoId: () => {
 // JS Object: utils - Función: saveProductChangesAndUpdateState (AJUSTADA)
 saveProductChangesAndUpdateState: async () => {
     try {
-        // 1. Guardar la lista (updateListaProductos)
+        // 1. Guardar la lista de productos (debe ser la primera acción SÍNCRONA)
         await updateListaProductos.run();
         console.log("Lista de productos guardada.");
 
-        // 2. Calcular el nuevo estado
+        // 2. Calcular el nuevo estado (debe ocurrir ANTES de actualizar el estado)
         const nuevoEstadoId = utils.calcularNuevoEstadoId();
         console.log("Nuevo estado ID calculado:", nuevoEstadoId);
 
-        // 3. EJECUCIÓN ASÍNCRONA: Dispara la actualización del estado (sin AWAIT)
-        // Usamos .then() para encadenar las acciones de refresco SÓLO después de que termine.
-        updateEstadoPedidoGeneral.run({ newEstadoId: nuevoEstadoId })
-            .then(async () => {
-                console.log("Estado general actualizado. Refrescando UI...");
-                
-        // 4. Si todo el bloque de arriba fue exitoso, refrescar y mostrar éxito.
-        console.log("Refrescando datos...");
+        // 3. Ejecutar la actualización del estado general (updateEstadoPedidoGeneral)
+        // La promesa debe resolverse sin error.
+        await updateEstadoPedidoGeneral.run({ newEstadoId: nuevoEstadoId });
+        console.log("Estado general guardado.");
+
+        // --- 4. SECUENCIA CRÍTICA DE REFRESCO PARA SINCRONIZACIÓN ---
+
+        // A. Refrescar todas las fuentes de datos (CRÍTICO)
         await getPedidoDetalle.run();
         await getPedidosColaborador.run();
-        await getPedidosParaCharts.run();
         
-        // Forzar reseteo de gráficos para actualizar visualmente
-        // SOLO usamos los nombres correctos que existen actualmente.
-        await resetWidget("chartAtrasados", true);
-        await resetWidget("chartEnTiempo", true);
-        await resetWidget("Chart3", true); // <-- Agregamos Chart3 (Pendientes por Colaborador)
-        await resetWidget("chartPorCobrar", true); // <-- Agregamos chartPorCobrar
-        
-        showAlert('¡Lista y estado guardados correctamente!', 'success');
-            })
-            .catch((estadoError) => {
-                // Capturamos el error solo si la promesa del updateEstadoPedidoGeneral falla
-                console.error("Error al actualizar el estado general (Promesa Rota):", estadoError);
-                // NOTA: Dejamos el mensaje de error para debug, pero generalmente, en este punto el dato ya se guardó.
-                showAlert('Error al guardar el estado general del pedido.', 'error');
-            });
+        // Ejecución doble para romper caché de chartAtrasados / chartEnTiempo
+        await getPedidosParaCharts.run(); 
 
-    } catch (listaError) {
-        // 5. Manejar error en el guardado de la lista
-        console.error("Error al guardar la lista de productos:", listaError);
-        showAlert('Error al guardar la lista de productos.', 'error');
+        // Ejecutar las queries de las otras fuentes de gráficos
+        await getPedidosPendientesPorColabor.run(); // Fuente de Chart3
+        await getPedidosPorCobrar.run();           // Fuente de chartPorCobrar
+        await getPedidosParaCharts.run();          // Segunda ejecución para chartAtrasados
+			  await storeValue('lastChartUpdate', Date.now()); // <-- AÑADIR ESTA LÍNEA
+
+        // B. Forzar el repintado (RESET) de todos los gráficos
+        await resetWidget("chartAtrasados", true); 
+        await resetWidget("chartEnTiempo", true);  
+        await resetWidget("Chart3", true);
+        await resetWidget("chartPorCobrar", true); 
+        
+        // 5. Éxito
+        showAlert('¡Lista y estado guardados correctamente!', 'success');
+
+    } catch (error) {
+        // 6. Manejar errores
+        console.error("Error al guardar cambios:", error);
+        showAlert('Error al guardar el estado general del pedido.', 'error');
     }
 },
 updateEstadoItemsLote: () => {
