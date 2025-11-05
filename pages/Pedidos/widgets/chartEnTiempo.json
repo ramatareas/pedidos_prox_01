@@ -7,7 +7,7 @@
   "boxShadow": "{{appsmith.theme.boxShadow.appBoxShadow}}",
   "chartData": {
     "mzl5xmbhvx": {
-      "color": "#553DE9",
+      "color": "#1e3a8a",
       "data": "{{ chartUtils.prepararDatos().dataEnTiempo }}",
       "seriesName": ""
     }
