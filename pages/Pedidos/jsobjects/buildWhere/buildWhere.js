@@ -18,7 +18,7 @@ export default {
             if (colaboradorId) {
                 // CORRECCIÓN: Añadir ::integer para forzar el tipo
                 conditions.push(`p.asignado_a_id = ${colaboradorId}::integer`);
-                conditions.push(`p.estado_id IN (1, 2)`); 
+                conditions.push(`p.estado_id = 1`); 
             } else {
                 conditions.push(`p.asignado_a_id = 0`); // Sin resultados
             }

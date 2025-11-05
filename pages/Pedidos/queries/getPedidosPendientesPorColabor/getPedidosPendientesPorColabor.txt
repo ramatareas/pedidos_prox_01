@@ -6,7 +6,7 @@ FROM
 JOIN
     colaboradores col ON p.asignado_a_id = col.id
 WHERE
-    p.estado_id IN (1, 2) -- <--- CORRECCIÓN AQUÍ (ID 1 y 2)
+    p.estado_id = 1 -- <--- CORRECCIÓN AQUÍ (ID 1 y 2)
 GROUP BY
     col.nombre
 ORDER BY

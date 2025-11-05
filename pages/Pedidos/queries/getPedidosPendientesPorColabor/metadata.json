@@ -5,7 +5,7 @@
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "SELECT\n    col.nombre AS collaborator_name,\n    COUNT(p.id) AS order_count\nFROM\n    pedidos p\nJOIN\n    colaboradores col ON p.asignado_a_id = col.id\nWHERE\n    p.estado_id IN (1, 2) -- <--- CORRECCIÓN AQUÍ (ID 1 y 2)\nGROUP BY\n    col.nombre\nORDER BY\n    order_count DESC;",
+      "body": "SELECT\n    col.nombre AS collaborator_name,\n    COUNT(p.id) AS order_count\nFROM\n    pedidos p\nJOIN\n    colaboradores col ON p.asignado_a_id = col.id\nWHERE\n    p.estado_id = 1 -- <--- CORRECCIÓN AQUÍ (ID 1 y 2)\nGROUP BY\n    col.nombre\nORDER BY\n    order_count DESC;",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [

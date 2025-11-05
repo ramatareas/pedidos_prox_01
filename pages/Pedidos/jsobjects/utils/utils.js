@@ -256,77 +256,55 @@ loadCurrentProductList: async (selectedPedidoId) => {
 		}
 	},
 
+// JS Object: utils - Función: calcularNuevoEstadoId (NUEVA LÓGICA)
 calcularNuevoEstadoId: () => {
-    // Asegúrate de tener una query que traiga los estados (ej. getEstadosOrdenados)
-    // y que ya se haya ejecutado (puedes añadir getEstadosOrdenados.run() al inicio si es necesario)
     const productList = appsmith.store.currentProductList || [];
-    const estadosData = getEstadosOrdenados.data || []; // Usa el nombre de tu query de estados
+    const estadosData = getEstadosOrdenados.data || []; 
 
-    // Si no hay productos o datos de estados, devuelve el estado actual del pedido para no cambiarlo
+    // Si no hay productos o datos de estados, devuelve el estado actual del pedido.
     if (productList.length === 0 || estadosData.length === 0) {
-        return getPedidoDetalle.data[0]?.estado_id || 1; // Devuelve ID actual o 1 por defecto
+        return getPedidoDetalle.data[0]?.estado_id || 1; 
     }
 
-    // 1. Contar cuántas veces aparece cada 'estado_item' válido
-    const counts = productList.reduce((acc, item) => {
-        // Solo cuenta si el estado_item existe y no está vacío
+    // --- 1. Obtener todos los IDs de Estado y sus órdenes visuales ---
+    let lowestOrder = Infinity; // Empezamos con un número muy alto
+    let winningEstadoInterno = null;
+    
+    const estadosEnElPedido = new Set();
+    
+    // Recorrer la lista de productos y coleccionar todos los estados únicos
+    productList.forEach(item => {
         if (item.estado_item && String(item.estado_item).trim() !== "") {
-            acc[item.estado_item] = (acc[item.estado_item] || 0) + 1;
-        }
-        return acc;
-    }, {});
-
-    const estadosEnLista = Object.keys(counts);
-
-    // Si no hay ningún estado_item válido en la lista, devuelve el estado actual
-    if (estadosEnLista.length === 0) {
-       return getPedidoDetalle.data[0]?.estado_id || 1;
-    }
-
-    // 2. Encontrar cuál es la frecuencia más alta
-    let maxCount = 0;
-    estadosEnLista.forEach(estado => {
-        if (counts[estado] > maxCount) {
-            maxCount = counts[estado];
+            estadosEnElPedido.add(item.estado_item);
         }
     });
 
-    // 3. Filtrar para obtener todos los estados que tienen esa frecuencia máxima (puede haber empates)
-    const mostFrequentStates = estadosEnLista.filter(estado => counts[estado] === maxCount);
-
-    let winningEstadoInterno;
-
-    if (mostFrequentStates.length === 1) {
-        // 4a. Si solo hay un estado más frecuente, ese es el ganador
-        winningEstadoInterno = mostFrequentStates[0];
-    } else {
-        // 4b. Si hay empate, busca entre los empatados cuál tiene el mayor 'orden_visual'
-        let highestOrder = -1; // Empezamos con un orden bajo
-        mostFrequentStates.forEach(estadoInterno => {
-            // Busca la información de este estado en los datos de maestro_estados
-            const estadoInfo = estadosData.find(e => e.estado_interno === estadoInterno);
-            // Si encontramos el estado y su orden es mayor al que teníamos guardado...
-            if (estadoInfo && estadoInfo.orden_visual > highestOrder) {
-                highestOrder = estadoInfo.orden_visual; // Actualizamos el orden más alto
-                winningEstadoInterno = estadoInterno;  // Este es el nuevo ganador temporal
-            }
-        });
-        // Si por alguna razón no encontramos un ganador (datos inconsistentes), nos quedamos con el primero del empate
-         if (!winningEstadoInterno && mostFrequentStates.length > 0) {
-             winningEstadoInterno = mostFrequentStates[0];
-         }
+    if (estadosEnElPedido.size === 0) {
+        return getPedidoDetalle.data[0]?.estado_id || 1;
     }
 
-     // Si aún no hay ganador (caso extremo), devuelve estado actual
-     if (!winningEstadoInterno) {
-          return getPedidoDetalle.data[0]?.estado_id || 1;
-     }
+    // --- 2. Encontrar el Mínimo orden_visual ---
+    estadosEnElPedido.forEach(estadoInterno => {
+        // Busca la información del estado maestro
+        const estadoInfo = estadosData.find(e => e.estado_interno === estadoInterno);
+        
+        // Compara si este orden es el más bajo encontrado hasta ahora
+        if (estadoInfo && estadoInfo.orden_visual < lowestOrder) {
+            lowestOrder = estadoInfo.orden_visual;
+            winningEstadoInterno = estadoInterno;
+        }
+    });
+    
+    // --- 3. Devolver el ID del Estado Ganador ---
+    if (!winningEstadoInterno) {
+        return getPedidoDetalle.data[0]?.estado_id || 1;
+    }
 
-    // 5. Busca el registro completo del estado ganador en maestro_estados para obtener su ID
     const finalEstado = estadosData.find(e => e.estado_interno === winningEstadoInterno);
 
-    // 6. Devuelve el ID del estado ganador. Si no se encontró (raro), devuelve el ID actual del pedido.
-    console.log("Estado item más frecuente:", winningEstadoInterno, "ID:", finalEstado ? finalEstado.id : 'No encontrado');
+    console.log("Nuevo estado calculado (Menor Orden):", winningEstadoInterno, "ID:", finalEstado ? finalEstado.id : 'No encontrado');
+    
+    // Retorna el ID numérico
     return finalEstado ? finalEstado.id : (getPedidoDetalle.data[0]?.estado_id || 1);
 },
 
