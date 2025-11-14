@@ -1,12 +1,12 @@
-{{
-`UPDATE public.clientes
+UPDATE public.clientes
 SET
-    nombre = '${inpNombreCliente.text || ''}',
-    contacto = '${inpContactoCliente.text || ''}',
-    tel_cel = '${inpTelCelCliente.text || ''}',
-    cliente_wa = '${appsmith.store.temp_cliente_wa || ''}',
-    direccion = '${inpDireccionCliente.text || ''}',
-    email = '${inpEmailCliente.text || ''}'
+    nombre = '{{ inpNombreCliente.text }}',
+    contacto = '{{ inpContactoCliente.text }}',
+    tel_cel = '{{ inpTelCelCliente.text }}',
+    direccion = '{{ inpDireccionCliente.text }}',
+    email = '{{ inpEmailCliente.text }}', -- <--- ¡IMPORTANTE! Verifica esta coma
+    
+    porcentaje_sobre_costo = {{ inpPorcentajeCosto.text ? Number(inpPorcentajeCosto.text) : 0 }}
+
 WHERE
-    id = ${tblClientes.selectedRow.id};`
-}}
+    id = {{ appsmith.store.currentClienteId }};  -- <--- CAMBIO AQUÍ (Variable segura)

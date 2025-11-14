@@ -91,6 +91,7 @@ export default {
         await resetWidget('inpTelCelCliente', true);
         await resetWidget('inpDireccionCliente', true);
         await resetWidget('inpEmailCliente', true);
+			  await resetWidget("inpPorcentajeCosto", true);
         
         // Limpia el estado de edición
         await storeValue('currentClienteId', null);

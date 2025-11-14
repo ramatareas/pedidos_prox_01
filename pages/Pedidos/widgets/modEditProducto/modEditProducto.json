@@ -1,14 +1,14 @@
 {
   "animateLoading": true,
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
-  "bottomRow": 399,
+  "bottomRow": 389,
   "boxShadow": "none",
   "canEscapeKeyClose": true,
   "canOutsideClickClose": true,
   "children": [
     {
       "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
-      "bottomRow": 400,
+      "bottomRow": 390,
       "boxShadow": "{{appsmith.theme.boxShadow.appBoxShadow}}",
       "canExtend": true,
       "detachFromLayout": true,
@@ -29,7 +29,7 @@
       "leftColumn": 0,
       "maxDynamicHeight": 9000,
       "minDynamicHeight": 4,
-      "minHeight": 240,
+      "minHeight": 390,
       "minWidth": 450,
       "mobileBottomRow": 240,
       "mobileLeftColumn": 0,
@@ -57,7 +57,7 @@
     }
   ],
   "dynamicHeight": "AUTO_HEIGHT",
-  "height": 400,
+  "height": 390,
   "isCanvas": true,
   "isLoading": false,
   "key": "m2smofi0r2",
@@ -81,5 +81,5 @@
   "version": 2,
   "widgetId": "bww6o547xs",
   "widgetName": "modEditProducto",
-  "width": 1334
+  "width": 1258
 }

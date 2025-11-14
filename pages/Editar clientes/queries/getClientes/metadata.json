@@ -5,7 +5,7 @@
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "SELECT \n    id,\n    created_at,\n    cliente_wa,\n    nombre,\n    contacto, -- Nombre de columna corregido en Supabase\n    tel_cel,\n    direccion, -- Nueva columna (asumiendo que ya la creaste con SQL)\n    email      -- Nueva columna (asumiendo que ya la creaste con SQL)\nFROM \n    public.clientes\nORDER BY \n    id DESC;",
+      "body": "SELECT \n    id,\n    created_at,\n    cliente_wa,\n    nombre,\n    contacto, -- Nombre de columna corregido en Supabase\n    tel_cel,\n    direccion, -- Nueva columna (asumiendo que ya la creaste con SQL)\n    email,      -- Nueva columna (asumiendo que ya la creaste con SQL)\n\t\tporcentaje_sobre_costo   -- <-- NUEVO CAMPO AÑADIDO\nFROM \n    public.clientes\nORDER BY \n    id DESC;",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [

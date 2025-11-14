@@ -4,7 +4,8 @@ INSERT INTO public.clientes (
     tel_cel,
     cliente_wa,
     direccion,
-    email
+    email,
+	  porcentaje_sobre_costo   -- <-- NUEVO CAMPO AÑADIDO
 )
 VALUES (
     '{{ inpNombreCliente.text || null }}',
@@ -12,5 +13,6 @@ VALUES (
     '{{ inpTelCelCliente.text || null }}',
     '{{ appsmith.store.temp_cliente_wa || null }}',
     '{{ inpDireccionCliente.text || null }}',
-    '{{ inpEmailCliente.text || null }}'
+    '{{ inpEmailCliente.text || null }}',
+	  {{ inpPorcentajeCosto.text || 0 }}  -- <-- VALOR DEL INPUT
 );

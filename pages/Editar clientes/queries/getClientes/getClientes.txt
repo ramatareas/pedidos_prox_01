@@ -6,7 +6,8 @@ SELECT
     contacto, -- Nombre de columna corregido en Supabase
     tel_cel,
     direccion, -- Nueva columna (asumiendo que ya la creaste con SQL)
-    email      -- Nueva columna (asumiendo que ya la creaste con SQL)
+    email,      -- Nueva columna (asumiendo que ya la creaste con SQL)
+		porcentaje_sobre_costo   -- <-- NUEVO CAMPO AÑADIDO
 FROM 
     public.clientes
 ORDER BY 

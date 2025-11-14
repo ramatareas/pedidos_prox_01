@@ -5,7 +5,7 @@
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "INSERT INTO public.clientes (\n    nombre,\n    contacto,\n    tel_cel,\n    cliente_wa,\n    direccion,\n    email\n)\nVALUES (\n    '{{ inpNombreCliente.text || null }}',\n    '{{ inpContactoCliente.text || null }}',\n    '{{ inpTelCelCliente.text || null }}',\n    '{{ appsmith.store.temp_cliente_wa || null }}',\n    '{{ inpDireccionCliente.text || null }}',\n    '{{ inpEmailCliente.text || null }}'\n);",
+      "body": "INSERT INTO public.clientes (\n    nombre,\n    contacto,\n    tel_cel,\n    cliente_wa,\n    direccion,\n    email,\n\t  porcentaje_sobre_costo   -- <-- NUEVO CAMPO AÑADIDO\n)\nVALUES (\n    '{{ inpNombreCliente.text || null }}',\n    '{{ inpContactoCliente.text || null }}',\n    '{{ inpTelCelCliente.text || null }}',\n    '{{ appsmith.store.temp_cliente_wa || null }}',\n    '{{ inpDireccionCliente.text || null }}',\n    '{{ inpEmailCliente.text || null }}',\n\t  {{ inpPorcentajeCosto.text || 0 }}  -- <-- VALOR DEL INPUT\n);",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [

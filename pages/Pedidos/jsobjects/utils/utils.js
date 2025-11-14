@@ -114,112 +114,115 @@ loadCurrentProductList: async (selectedPedidoId) => {
 	// --- INICIO: Función Actualizada ---
 	// Función SOLO para añadir producto (llamada desde modAddProducto)
 	addProductToList: () => {
-		const currentList = appsmith.store.currentProductList || [];
-		let modifiedList = [...currentList];
+        const currentList = appsmith.store.currentProductList || [];
+        let modifiedList = [...currentList];
 
-		// Lee valores (¡ASEGÚRATE QUE LOS NOMBRES SEAN CORRECTOS!)
-		const productoText = inpProductoAdd.text;         // Input Producto
-		const cantidadText = inpCantidadAdd.text;         // Input Cantidad
-		const priceValue = inpPrecioVentaAdd.text;      // Input Precio
-		const tipoUnidadText = inpTipoUnidadAdd.text;     // Input Tipo Unidad
-		const estadoItemValue = selEstadoItemAdd.selectedOptionValue; // Dropdown Estado Ítem
-		const comentariosItemText = inpComentariosItemAdd.text; // Input Comentarios Ítem
+        // --- Lectura de Inputs ---
+        const productoText = inpProductoAdd.text;
+        const cantidadText = inpCantidadAdd.text;
+        const priceValue = inpPrecioVentaAdd.text;
+        const tipoUnidadText = inpTipoUnidadAdd.text;
+        const estadoItemValue = selEstadoItemAdd.selectedOptionValue;
+        const comentariosItemText = inpComentariosItemAdd.text;
+        
+        // --- NUEVOS INPUTS AÑADIDOS ---
+        const precioUnitValue = inpPrecioUnitarioAdd.text;
+        const costoUnitValue = inpCostoUnitarioAdd.text;
+        const costoVentasValue = inpCostoVentasAdd.text;
+        const utilidadValue = inpUtilidadAdd.text;
 
-		// Validaciones básicas
-		if (!productoText || !cantidadText) {
-			showAlert('Producto y Cantidad son requeridos.', 'warning');
-			return;
-		}
+        if (!productoText || !cantidadText) {
+            showAlert('Producto y Cantidad son requeridos.', 'warning');
+            return;
+        }
 
-		const newProductData = {
-			producto: productoText,
-			cantidad: String(cantidadText || '1'), // Asegura string
-			precio_venta: (priceValue === null || priceValue === "" || priceValue === undefined || isNaN(parseFloat(priceValue)))
-										? null 
-										: parseFloat(priceValue), // Convierte a número si es válido
-			tipo_unidad: tipoUnidadText || "",             // Nuevo
-			estado_item: estadoItemValue || null,           // Nuevo
-			comentarios_item: comentariosItemText || ""     // Nuevo
-		};
+        // Función para parsear a número o devolver null (para evitar 0s)
+        const parseToFloatOrNull = (val) => {
+            const num = parseFloat(val);
+            return (val === null || val === "" || isNaN(num)) ? null : num;
+        };
 
-		modifiedList.push(newProductData); // Añade el nuevo objeto
+        const newProductData = {
+            producto: productoText,
+            cantidad: String(cantidadText || '1'),
+            precio_venta: parseToFloatOrNull(priceValue),
+            tipo_unidad: tipoUnidadText || "",
+            estado_item: estadoItemValue || null,
+            comentarios_item: comentariosItemText || "",
+            
+            // --- NUEVOS CAMPOS AÑADIDOS ---
+            precio_unitario: parseToFloatOrNull(precioUnitValue),
+            costo_unitario: parseToFloatOrNull(costoUnitValue),
+            costo_ventas: parseToFloatOrNull(costoVentasValue),
+            Utilidad: parseToFloatOrNull(utilidadValue)
+        };
 
-		storeValue('currentProductList', modifiedList); // Guarda la lista actualizada
-		closeModal('modAddProducto'); // Cierra el modal de añadir
-		// (Opcional) Resetea los campos del modal de añadir si es necesario
-		// resetWidget('inpProductoAdd', true); 
-		// resetWidget('inpCantidadAdd', true);
-		// ... etc.
-	},
+        modifiedList.push(newProductData);
+        storeValue('currentProductList', modifiedList);
+        closeModal('modAddProducto');
+    },
 	// --- FIN: Función Actualizada ---
 
 
 	// --- INICIO: Función Actualizada ---
 	// Función para guardar cambios desde modEditProducto
 	upsertProducto: () => {
-		const index = appsmith.store.editIndex;
-		console.log("Intentando editar índice:", index);
+        const index = appsmith.store.editIndex;
+        if (index === undefined || index === null || index < 0) {
+            showAlert('Error: No se pudo determinar qué producto editar.', 'error');
+            return;
+        }
+        
+        const currentList = appsmith.store.currentProductList || [];
+        let modifiedList = [...currentList];
+        
+        // --- Lectura de Inputs de Edición ---
+        const productoText = inpProductoEdit.text;
+        const cantidadText = inpCantidadEdit.text;
+        const priceValue = inpPrecioVentaEdit.text;
+        const tipoUnidadText = inpTipoUnidadEdit.text;
+        const estadoItemValue = selEstadoItemEdit.selectedOptionValue;
+        const comentariosItemText = inpComentariosItemEdit.text;
+        
+        // --- NUEVOS INPUTS DE EDICIÓN AÑADIDOS ---
+        const precioUnitValue = inpPrecioUnitarioEdit.text;
+        const costoUnitValue = inpCostoUnitarioEdit.text;
+        const costoVentasValue = inpCostoVentasEdit.text;
+        const utilidadValue = inpUtilidadEdit.text;
 
-		// Validación robusta del índice
-		if (index === undefined || index === null || index < 0) {
-			console.error("Índice inválido o no definido:", index);
-			showAlert('Error: No se pudo determinar qué producto editar.', 'error');
-			return;
-		}
+        if (!productoText || !cantidadText) {
+            showAlert('Producto y Cantidad son requeridos.', 'warning');
+            return;
+        }
 
-		const currentList = appsmith.store.currentProductList || [];
-		// Verifica si el índice es válido para la lista actual
-		if (index >= currentList.length) {
-			console.error("Índice fuera de rango:", index, "Tamaño lista:", currentList.length);
-			showAlert('Error: Índice de producto fuera de rango.', 'error');
-			return;
-		}
+        // Función para parsear a número o devolver null
+        const parseToFloatOrNull = (val) => {
+            const num = parseFloat(val);
+            return (val === null || val === "" || isNaN(num)) ? null : num;
+        };
 
-		let modifiedList = [...currentList]; // Copia la lista actual
+        const updatedProduct = {
+            ...modifiedList[index], // Mantiene campos que no se editan
+            producto: productoText,
+            cantidad: String(cantidadText || '1'),
+            precio_venta: parseToFloatOrNull(priceValue),
+            tipo_unidad: tipoUnidadText || "",
+            estado_item: estadoItemValue || null,
+            comentarios_item: comentariosItemText || "",
+            
+            // --- NUEVOS CAMPOS AÑADIDOS ---
+            precio_unitario: parseToFloatOrNull(precioUnitValue),
+            costo_unitario: parseToFloatOrNull(costoUnitValue),
+            costo_ventas: parseToFloatOrNull(costoVentasValue),
+            Utilidad: parseToFloatOrNull(utilidadValue)
+        };
 
-		// Lee valores de los inputs de edición (¡ASEGÚRATE QUE LOS NOMBRES SEAN CORRECTOS!)
-		const productoText = inpProductoEdit.text;         // Input Producto
-		const cantidadText = inpCantidadEdit.text;         // Input Cantidad
-		const priceValue = inpPrecioVentaEdit.text;      // Input Precio
-		const tipoUnidadText = inpTipoUnidadEdit.text;     // Input Tipo Unidad
-		const estadoItemValue = selEstadoItemEdit.selectedOptionValue; // Dropdown Estado Ítem
-		const comentariosItemText = inpComentariosItemEdit.text; // Input Comentarios Ítem
-
-
-		// Validaciones básicas
-		if (!productoText || !cantidadText) {
-			showAlert('Producto y Cantidad son requeridos.', 'warning');
-			return;
-		}
-		
-		// Crea el objeto actualizado
-		const updatedProduct = {
-			...modifiedList[index], // Mantiene otros campos si existieran y no se editan aquí
-			producto: productoText,
-			cantidad: String(cantidadText || '1'), // Asegura string
-			precio_venta: (priceValue === null || priceValue === "" || priceValue === undefined || isNaN(parseFloat(priceValue)))
-										? null 
-										: parseFloat(priceValue), // Convierte a número si es válido
-			tipo_unidad: tipoUnidadText || "",             // Nuevo/Actualizado
-			estado_item: estadoItemValue || null,           // Nuevo/Actualizado
-			comentarios_item: comentariosItemText || ""     // Nuevo/Actualizado
-		};
-
-		// Actualiza el elemento en la lista copiada
-		modifiedList[index] = updatedProduct;
-
-		// Guarda la lista modificada en el store
-		storeValue('currentProductList', modifiedList);
-
-		// Limpia stores temporales
-		storeValue('editRowData', undefined);
-		storeValue('editIndex', undefined); // Limpia completamente
-
-		// Cierra el modal de edición
-		closeModal('modEditProducto');
-	},
-  // --- FIN: Función Actualizada ---
-
+        modifiedList[index] = updatedProduct;
+        storeValue('currentProductList', modifiedList);
+        storeValue('editRowData', undefined);
+        storeValue('editIndex', undefined);
+        closeModal('modEditProducto');
+    },
 	eliminarProducto: () => {
 		const selectedIndex = tblProductos.selectedRowIndex;
 		if (selectedIndex === null || selectedIndex < 0) {

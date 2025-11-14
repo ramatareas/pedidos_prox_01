@@ -5,7 +5,7 @@
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "{{\n`UPDATE public.clientes\nSET\n    nombre = '${inpNombreCliente.text || ''}',\n    contacto = '${inpContactoCliente.text || ''}',\n    tel_cel = '${inpTelCelCliente.text || ''}',\n    cliente_wa = '${appsmith.store.temp_cliente_wa || ''}',\n    direccion = '${inpDireccionCliente.text || ''}',\n    email = '${inpEmailCliente.text || ''}'\nWHERE\n    id = ${tblClientes.selectedRow.id};`\n}}",
+      "body": "UPDATE public.clientes\nSET\n    nombre = '{{ inpNombreCliente.text }}',\n    contacto = '{{ inpContactoCliente.text }}',\n    tel_cel = '{{ inpTelCelCliente.text }}',\n    direccion = '{{ inpDireccionCliente.text }}',\n    email = '{{ inpEmailCliente.text }}', -- <--- ¡IMPORTANTE! Verifica esta coma\n    \n    porcentaje_sobre_costo = {{ inpPorcentajeCosto.text ? Number(inpPorcentajeCosto.text) : 0 }}\n\nWHERE\n    id = {{ appsmith.store.currentClienteId }};  -- <--- CAMBIO AQUÍ (Variable segura)",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [
