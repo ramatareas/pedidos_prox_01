@@ -1,5 +1,8 @@
 UPDATE public.pedidos
 SET
-  lista_solicitud = '{{ JSON.stringify(appsmith.store.currentProductList || []) }}'::jsonb
+  lista_solicitud = '{{ 
+    JSON.stringify(appsmith.store.currentProductList || [])
+      .replace(new RegExp("'", "g"), "''")
+  }}'::jsonb
 WHERE
-  id = {{ appsmith.store.currentPedidoId }}; -- <-- CAMBIO AQUÍ
+  id = {{ appsmith.store.currentPedidoId }};

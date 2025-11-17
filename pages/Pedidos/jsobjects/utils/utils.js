@@ -61,22 +61,25 @@ export default {
 	// Funciones del Workflow (Actualizadas)
 	// ----------------------
 
+// JS Object: utils
+
 loadCurrentProductList: async (selectedPedidoId) => {
     try {
-        // 1. Guardar el ID del pedido
         await storeValue('currentPedidoId', selectedPedidoId);
-        
-        // 2. AWAIT: Forzar la espera a que la consulta termine
-        // Esta es la corrección clave para la condición de carrera.
         const data = await getPedidoDetalle.run(); 
 
-        // 3. Verificar si la consulta falló (si 'data' está vacío)
         if (!data || data.length === 0) {
             showAlert('Error: No se pudieron cargar los detalles del pedido.', 'error');
-            return; // Detener si no hay datos
+            return;
         }
 
-        // 4. Procesar y guardar la lista de productos
+        // --- INICIO: LÓGICA AÑADIDA ---
+        // Si hay un cliente_id, ejecuta el query para traer su % de costo
+        if (data[0]?.cliente_id) {
+            await getClientePorcentaje.run();
+        }
+        // --- FIN: LÓGICA AÑADIDA ---
+
         let productList = data[0]?.lista_solicitud;
         if (typeof productList === 'string') {
             await storeValue('currentProductList', JSON.parse(productList || '[]'));
@@ -84,11 +87,8 @@ loadCurrentProductList: async (selectedPedidoId) => {
             await storeValue('currentProductList', productList || []);
         }
 
-        // 5. Resetear widgets del modal
         await resetWidget('selEstadoLote', true);
         await resetWidget('inpNuevoComentario', true);
-
-        // 6. FINALMENTE: Mostrar el modal (ahora que los datos están listos)
         showModal('modDetallePedidoColaborador');
 
     } catch (error) {
@@ -315,16 +315,15 @@ calcularNuevoEstadoId: () => {
 // JS Object: utils - Función: saveProductChangesAndUpdateState (AJUSTADA)
 saveProductChangesAndUpdateState: async () => {
     try {
-        // 1. Guardar la lista de productos (debe ser la primera acción SÍNCRONA)
+        // 1. Guardar la lista (updateListaProductos)
         await updateListaProductos.run();
         console.log("Lista de productos guardada.");
 
-        // 2. Calcular el nuevo estado (debe ocurrir ANTES de actualizar el estado)
+        // 2. Calcular el nuevo estado (basado en la lista del store)
         const nuevoEstadoId = utils.calcularNuevoEstadoId();
         console.log("Nuevo estado ID calculado:", nuevoEstadoId);
 
-        // 3. Ejecutar la actualización del estado general (updateEstadoPedidoGeneral)
-        // La promesa debe resolverse sin error.
+        // 3. Ejecutar la actualización del estado general
         await updateEstadoPedidoGeneral.run({ newEstadoId: nuevoEstadoId });
         console.log("Estado general guardado.");
 
@@ -341,7 +340,6 @@ saveProductChangesAndUpdateState: async () => {
         await getPedidosPendientesPorColabor.run(); // Fuente de Chart3
         await getPedidosPorCobrar.run();           // Fuente de chartPorCobrar
         await getPedidosParaCharts.run();          // Segunda ejecución para chartAtrasados
-			  await storeValue('lastChartUpdate', Date.now()); // <-- AÑADIR ESTA LÍNEA
 
         // B. Forzar el repintado (RESET) de todos los gráficos
         await resetWidget("chartAtrasados", true); 
@@ -349,12 +347,16 @@ saveProductChangesAndUpdateState: async () => {
         await resetWidget("Chart3", true);
         await resetWidget("chartPorCobrar", true); 
         
+        // C. (Opcional) Limpiar el selector de lote
+        await resetWidget("selEstadoLote", true);
+
         // 5. Éxito
         showAlert('¡Lista y estado guardados correctamente!', 'success');
 
     } catch (error) {
         // 6. Manejar errores
         console.error("Error al guardar cambios:", error);
+        // Este es el error que estás viendo:
         showAlert('Error al guardar el estado general del pedido.', 'error');
     }
 },
@@ -535,57 +537,166 @@ getIndicadorParaTabla: (estadoInterno, fechaPlazoStr) => {
     return { text: "En Tiempo", color: "#553DE9" };
 },
 	
-	// JS Object: utils
-// AÑADE ESTA FUNCIÓN AL FINAL DE TU JS OBJECT 'UTILS'
-
-// JS Object: utils - Función: procesarDataPedidos (SECCIÓN CORREGIDA)
-// JS Object: utils - Función: procesarDataPedidos (CORREGIDA Y COMPLETA)
+// JS Object: utils - Función: procesarDataPedidos
 procesarDataPedidos: () => {
-    return getPedidosColaborador.data.map(pedido => {
-        // --- CÓDIGO DE PARSING RESTAURADO ---
-        let items = pedido.lista_solicitud;
+  return getPedidosColaborador.data.map(pedido => {
+    let items = pedido.lista_solicitud;
 
-        // 1. Asegurarse de que 'items' sea un array (maneja strings JSONB y null)
-        try {
-            items = (typeof items === 'string') ? JSON.parse(items || '[]') : items || [];
-        } catch (e) {
-            items = [];
-        }
-        // --- FIN DEL CÓDIGO DE PARSING ---
+    // 1. Parsing seguro
+    try {
+        items = (typeof items === 'string') ? JSON.parse(items || '[]') : items || [];
+    } catch (e) {
+        items = [];
+    }
+    
+    // 2. Inicializar contadores
+    const aggregation = {}; 
+    let totalCostoVentas = 0;
+    let totalPrecioVenta = 0;
+    let totalUtilidad = 0;
 
+    if (Array.isArray(items) && items.length > 0) {
+        items.forEach(item => {
+            // A. Lógica de Resumen (existente)
+            const estado = item.estado_item || 'sin_estado'; 
+            const cantidad = parseInt(item.cantidad) || 1; // Para conteo de items
 
-        // --- Agregación y Conteo (CORRECCIÓN CLAVE) ---
-        const aggregation = {}; 
-        if (Array.isArray(items) && items.length > 0) {
-            items.forEach(item => {
-                const estado = item.estado_item || 'sin_estado'; 
-                
-                if (!aggregation[estado]) {
-                    aggregation[estado] = 0;
-                }
-                // ¡CONTAR ITEM (SUMAR 1) — Solución anterior!
-                aggregation[estado] += 1; 
-            });
-        }
+            if (!aggregation[estado]) aggregation[estado] = 0;
+            aggregation[estado] += 1; // Cuenta ítems (filas)
 
-       // --- Formato de Salida HTML (CORREGIDO) ---
-        const outputLines = Object.keys(aggregation).map(estado => {
-            const totalItems = aggregation[estado];
-            // Cambiar a minúsculas:
-            const label = totalItems === 1 ? 'artículo' : 'artículos';
-            
-            // Color fijo NEGRO, ignorando la lógica previa
-            const color = 'black'; 
-            
-            // La etiqueta final ahora es: "artículo(s) [estado]"
-            return `<span style="color: ${color};"><b>${totalItems} ${label}</b> ${estado}</span>`;
+            // B. Lógica de Sumas Financieras (NUEVA)
+            // Usamos parseFloat y || 0 para evitar errores con nulls
+            totalCostoVentas += parseFloat(item.costo_ventas || 0);
+            totalPrecioVenta += parseFloat(item.precio_venta || 0);
+            totalUtilidad += parseFloat(item.Utilidad || 0);
         });
-        
-        // 2. Devolver el pedido original con el campo de resumen
-        return {
-            ...pedido,
-            productos_resumen: outputLines.length === 0 ? '<span style="color: grey;">- Vacío -</span>' : outputLines.join('<br>')
-        };
+    }
+
+    // 3. Formato de Resumen HTML
+    const outputLines = Object.keys(aggregation).map(estado => {
+        const totalItems = aggregation[estado];
+        const label = totalItems === 1 ? 'artículo' : 'artículos';
+        return `<span style="color: black;"><b>${totalItems} ${label}</b> ${estado}</span>`;
     });
+    
+    // 4. Retorno del objeto enriquecido
+    return {
+        ...pedido,
+        productos_resumen: outputLines.length === 0 ? '<span style="color: grey;">- Vacío -</span>' : outputLines.join('<br>'),
+        // Nuevos campos calculados disponibles para la tabla
+        calc_costo_ventas: totalCostoVentas,
+        calc_precio_venta: totalPrecioVenta,
+        calc_utilidad: totalUtilidad
+    };
+  });
+},
+	calcularSobreCosto: () => {
+    // 1. Obtener el % del cliente (cargado por getClientePorcentaje)
+    const porcentajeCliente = getClientePorcentaje.data[0]?.porcentaje_sobre_costo;
+
+    // Validación
+    if (porcentajeCliente === null || porcentajeCliente === undefined) {
+        showAlert('El % sobre costo no está definido para este cliente. Revise el maestro de clientes.', 'error');
+        return;
+    }
+    // Convertir el porcentaje (ej. 20%) a multiplicador (ej. 1.20)
+    const multiplicador = 1 + (parseFloat(porcentajeCliente) / 100);
+
+    // 2. Obtener valores de los inputs (asegurando que sean números)
+    const costoUnit = parseFloat(inpCostoUnitarioEdit.text) || 0;
+    const cantidad = parseFloat(inpCantidadEdit.text) || 0;
+
+    // 3. Ejecutar cálculos en orden
+    const costoVentas = costoUnit * cantidad;
+    const precioUnit = costoUnit * multiplicador; // Precio unitario basado en el %
+    const precioVenta = precioUnit * cantidad;
+    const utilidad = precioVenta - costoVentas;
+
+    // 4. Asignar valores a los widgets de edición
+    inpCostoVentasEdit.setValue(costoVentas.toFixed(2));
+    inpPrecioUnitarioEdit.setValue(precioUnit.toFixed(2)); // Actualiza el precio unitario
+    inpPrecioVentaEdit.setValue(precioVenta.toFixed(2));
+    inpUtilidadEdit.setValue(utilidad.toFixed(2));
+},
+
+// BOTÓN 2: CALCULAR USANDO PRECIO UNITARIO MANUAL
+calcularManual: () => {
+    // 1. Obtener valores de los inputs (asegurando que sean números)
+    const costoUnit = parseFloat(inpCostoUnitarioEdit.text) || 0;
+    const cantidad = parseFloat(inpCantidadEdit.text) || 0;
+    const precioUnit = parseFloat(inpPrecioUnitarioEdit.text) || 0; // Lee el precio manual
+
+    // 2. Ejecutar cálculos
+    const costoVentas = costoUnit * cantidad;
+    const precioVenta = precioUnit * cantidad; // Calcula la venta total
+    const utilidad = precioVenta - costoVentas; // Calcula la utilidad
+
+    // 3. Asignar valores (No tocamos precio_unitario porque fue la entrada)
+    inpCostoVentasEdit.setValue(costoVentas.toFixed(2));
+    inpPrecioVentaEdit.setValue(precioVenta.toFixed(2));
+    inpUtilidadEdit.setValue(utilidad.toFixed(2));
+},
+
+calcularSobreCostoAdd: () => {
+    // Obtener el % del cliente (ya cargado previamente)
+    const porcentajeCliente = getClientePorcentaje.data[0]?.porcentaje_sobre_costo;
+
+    if (porcentajeCliente === null || porcentajeCliente === undefined) {
+        showAlert('El % sobre costo no está definido para este cliente.', 'error');
+        return;
+    }
+
+    const multiplicador = 1 + (parseFloat(porcentajeCliente) / 100);
+
+    // Leer inputs del modal ADD
+    const costoUnit = parseFloat(inpCostoUnitarioAdd.text) || 0;
+    const cantidad = parseFloat(inpCantidadAdd.text) || 0;
+
+    // Cálculos
+    const costoVentas = costoUnit * cantidad;
+    const precioUnit = costoUnit * multiplicador;
+    const precioVenta = precioUnit * cantidad;
+    const utilidad = precioVenta - costoVentas;
+
+    // Setear valores en inputs ADD
+    inpCostoVentasAdd.setValue(costoVentas.toFixed(2));
+    inpPrecioUnitarioAdd.setValue(precioUnit.toFixed(2));
+    inpPrecioVentaAdd.setValue(precioVenta.toFixed(2));
+    inpUtilidadAdd.setValue(utilidad.toFixed(2));
+},
+
+// 2. Calcular Manualmente (Para Añadir)
+calcularManualAdd: () => {
+    // Leer inputs del modal ADD
+    const costoUnit = parseFloat(inpCostoUnitarioAdd.text) || 0;
+    const cantidad = parseFloat(inpCantidadAdd.text) || 0;
+    const precioUnit = parseFloat(inpPrecioUnitarioAdd.text) || 0; // Lee el precio manual
+
+    // Cálculos
+    const costoVentas = costoUnit * cantidad;
+    const precioVenta = precioUnit * cantidad;
+    const utilidad = precioVenta - costoVentas;
+
+    // Setear valores en inputs ADD (No tocamos precio_unitario porque es la entrada)
+    inpCostoVentasAdd.setValue(costoVentas.toFixed(2));
+    inpPrecioVentaAdd.setValue(precioVenta.toFixed(2));
+    inpUtilidadAdd.setValue(utilidad.toFixed(2));
+},
+	
+	// JS Object: utils (Añadir al final)
+
+calcularTotalesModal: () => {
+    const lista = appsmith.store.currentProductList || [];
+    
+    // Usamos reduce para sumar de forma compacta
+    const totales = lista.reduce((acc, item) => {
+        return {
+            costoVentas: acc.costoVentas + parseFloat(item.costo_ventas || 0),
+            precioVenta: acc.precioVenta + parseFloat(item.precio_venta || 0),
+            utilidad: acc.utilidad + parseFloat(item.Utilidad || 0)
+        };
+    }, { costoVentas: 0, precioVenta: 0, utilidad: 0 }); // Valores iniciales
+
+    return totales;
 }
 }

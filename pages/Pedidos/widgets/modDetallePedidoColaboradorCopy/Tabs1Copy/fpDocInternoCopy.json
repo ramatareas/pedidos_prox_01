@@ -1,0 +1,55 @@
+{
+  "allowedFileTypes": [
+    "*"
+  ],
+  "animateLoading": true,
+  "borderRadius": "1.5rem",
+  "bottomRow": 27,
+  "boxShadow": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+  "buttonColor": "#831843",
+  "dynamicBindingPathList": [],
+  "dynamicPropertyPathList": [
+    {
+      "key": "onFilesSelected"
+    }
+  ],
+  "dynamicTriggerPathList": [
+    {
+      "key": "onFilesSelected"
+    }
+  ],
+  "dynamicTyping": true,
+  "fileDataType": "Base64",
+  "files": [],
+  "isDefaultClickDisabled": true,
+  "isDisabled": false,
+  "isLoading": false,
+  "isRequired": false,
+  "isVisible": true,
+  "key": "6efxjf7m9x",
+  "label": "Carga un archivo..........",
+  "leftColumn": 0,
+  "maxFileSize": "50",
+  "maxNumFiles": "1",
+  "minWidth": 120,
+  "mobileBottomRow": 6,
+  "mobileLeftColumn": 28,
+  "mobileRightColumn": 44,
+  "mobileTopRow": 2,
+  "needsErrorInfo": false,
+  "onFilesSelected": "{{ FileUploader.subirArchivo() }}",
+  "originalBottomRow": 27,
+  "originalTopRow": 18,
+  "parentColumnSpace": 21.55216064453125,
+  "parentId": "j27ws633yp",
+  "parentRowSpace": 10,
+  "renderMode": "CANVAS",
+  "responsiveBehavior": "hug",
+  "rightColumn": 13,
+  "selectedFiles": [],
+  "topRow": 18,
+  "type": "FILE_PICKER_WIDGET_V2",
+  "version": 1,
+  "widgetId": "vlhrknbyw5",
+  "widgetName": "fpDocInternoCopy"
+}

@@ -5,7 +5,7 @@
   "pluginType": "DB",
   "unpublishedAction": {
     "actionConfiguration": {
-      "body": "UPDATE public.pedidos\nSET\n  lista_solicitud = '{{ JSON.stringify(appsmith.store.currentProductList || []) }}'::jsonb\nWHERE\n  id = {{ appsmith.store.currentPedidoId }}; -- <-- CAMBIO AQUÍ",
+      "body": "UPDATE public.pedidos\nSET\n  lista_solicitud = '{{ \n    JSON.stringify(appsmith.store.currentProductList || [])\n      .replace(new RegExp(\"'\", \"g\"), \"''\")\n  }}'::jsonb\nWHERE\n  id = {{ appsmith.store.currentPedidoId }};",
       "encodeParamsToggle": true,
       "paginationType": "NONE",
       "pluginSpecifiedTemplates": [

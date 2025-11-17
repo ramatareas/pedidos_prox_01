@@ -1,0 +1,57 @@
+{
+  "animateLoading": true,
+  "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
+  "bottomRow": 8,
+  "boxShadow": "none",
+  "buttonColor": "{{appsmith.theme.colors.primaryColor}}",
+  "buttonVariant": "PRIMARY",
+  "disabledWhenInvalid": false,
+  "dynamicBindingPathList": [
+    {
+      "key": "buttonColor"
+    },
+    {
+      "key": "borderRadius"
+    }
+  ],
+  "dynamicPropertyPathList": [
+    {
+      "key": "onClick"
+    }
+  ],
+  "dynamicTriggerPathList": [
+    {
+      "key": "onClick"
+    }
+  ],
+  "isDefaultClickDisabled": true,
+  "isDisabled": false,
+  "isLoading": false,
+  "isVisible": true,
+  "key": "wg6gk6oqln",
+  "leftColumn": 53,
+  "minWidth": 120,
+  "mobileBottomRow": 39,
+  "mobileLeftColumn": 1,
+  "mobileRightColumn": 17,
+  "mobileTopRow": 35,
+  "needsErrorInfo": false,
+  "onClick": "// Widget: btnGuardarcambios -> onClick\n(async () => {\n    try {\n        await updatePedidoEditable.run(); // Guarda la nueva fecha de plazo\n        \n        // --- AÑADIDO: Ejecución de Queries de Gráficos ---\n        await getPedidosParaCharts.run(); // Fuente de Atrasados / EnTiempo\n        await getPedidosPendientesPorColabor.run(); // Fuente de Por aprobar\n        await getPedidosPorCobrar.run();             // Fuente de Por cobrar\n        \n        // --- Refresco y Reset de la UI ---\n        await getPedidoDetalle.run(); \n        await getPedidosColaborador.run(); \n        \n        await resetWidget(\"chartAtrasados\", true);\n        await resetWidget(\"chartEnTiempo\", true);  \n        await resetWidget(\"Chart3\", true);\n        await resetWidget(\"chartPorCobrar\", true); \n        \n        await storeValue('lastChartUpdate', Date.now()); // Para romper la caché\n\n        showAlert('¡Cambios guardados exitosamente!', 'success');\n        \n    } catch (error) {\n        showAlert('Error al guardar los cambios: ' + error.message, 'error');\n    }\n})();",
+  "originalBottomRow": 38,
+  "originalTopRow": 34,
+  "parentColumnSpace": 18.498291015625,
+  "parentId": "j27ws633yp",
+  "parentRowSpace": 10,
+  "placement": "CENTER",
+  "recaptchaType": "V3",
+  "renderMode": "CANVAS",
+  "resetFormOnClick": false,
+  "responsiveBehavior": "hug",
+  "rightColumn": 63,
+  "text": "Guardar cambios generales",
+  "topRow": 1,
+  "type": "BUTTON_WIDGET",
+  "version": 1,
+  "widgetId": "omijps5dfv",
+  "widgetName": "btnGuardarcambiosCopy"
+}

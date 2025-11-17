@@ -21,7 +21,7 @@
   "dynamicTriggerPathList": [],
   "iconAlign": "left",
   "inputType": "NUMBER",
-  "isDisabled": false,
+  "isDisabled": true,
   "isLoading": false,
   "isRequired": false,
   "isVisible": true,

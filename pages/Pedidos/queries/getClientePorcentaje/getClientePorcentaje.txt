@@ -1,0 +1,3 @@
+SELECT porcentaje_sobre_costo
+FROM public.clientes
+WHERE id = {{ getPedidoDetalle.data[0]?.cliente_id }};

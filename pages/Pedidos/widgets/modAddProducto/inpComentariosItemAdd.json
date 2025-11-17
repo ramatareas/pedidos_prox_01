@@ -3,7 +3,7 @@
   "animateLoading": true,
   "autoFocus": false,
   "borderRadius": "1.5rem",
-  "bottomRow": 21,
+  "bottomRow": 38,
   "boxShadow": "none",
   "defaultText": "",
   "dynamicBindingPathList": [

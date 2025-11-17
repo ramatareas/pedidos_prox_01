@@ -1,0 +1,51 @@
+{
+  "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
+  "bottomRow": 12,
+  "counterClosewise": false,
+  "dynamicBindingPathList": [
+    {
+      "key": "fillColor"
+    },
+    {
+      "key": "borderRadius"
+    },
+    {
+      "key": "progress"
+    }
+  ],
+  "dynamicPropertyPathList": [
+    {
+      "key": "fillColor"
+    }
+  ],
+  "dynamicTriggerPathList": [],
+  "fillColor": "{{ utils.getEstadoIndicador().color }}",
+  "isCanvas": false,
+  "isIndeterminate": false,
+  "isLoading": false,
+  "isVisible": true,
+  "key": "xvcdqz318y",
+  "leftColumn": 22,
+  "mobileBottomRow": 10,
+  "mobileLeftColumn": 0,
+  "mobileRightColumn": 16,
+  "mobileTopRow": 6,
+  "needsErrorInfo": false,
+  "originalBottomRow": 16,
+  "originalTopRow": 12,
+  "parentColumnSpace": 23.390625,
+  "parentId": "s2u2pou2b9",
+  "parentRowSpace": 10,
+  "progress": "{{\n  (() => {\n    // 1. Obtener el ID del estado calculado por tu función utils\n    const estadoId = utils.calcularNuevoEstadoId();\n\n    // 2. Si el ID no está listo (devuelve undefined o null), devolvemos 0\n    //    ¡Esta es la verificación que arregla el error NaN!\n    if (!estadoId) {\n      return 0;\n    }\n\n    // 3. Buscar el objeto de estado completo\n    const estadoObj = getEstadosOrdenados.data.find(e => e.id == estadoId);\n\n    // 4. Si no encontramos el objeto (porque getEstadosOrdenados no está listo), devolvemos 0\n    if (!estadoObj) {\n      return 0;\n    }\n\n    // 5. Obtener el orden_visual\n    const orden = estadoObj.orden_visual;\n    const maxOrden = 11;\n\n    // 6. Si el orden es nulo o 0, devolvemos 0\n    if (!orden || orden === 0) {\n      return 0;\n    }\n\n    // 7. Si es el máximo, devolvemos 100\n    if (orden === maxOrden) {\n      return 100;\n    }\n\n    // 8. Calcular, redondear y devolver el entero\n    return Math.round((orden / maxOrden) * 100);\n  })()\n}}",
+  "progressType": "linear",
+  "renderMode": "CANVAS",
+  "responsiveBehavior": "fill",
+  "rightColumn": 47,
+  "showResult": true,
+  "steps": "11",
+  "topRow": 8,
+  "type": "PROGRESS_WIDGET",
+  "version": 1,
+  "widgetId": "ferl035v56",
+  "widgetName": "Progress1Copy"
+}
