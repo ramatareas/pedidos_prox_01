@@ -41,15 +41,15 @@
     "created_at",
     "lista_solicitud",
     "nombre_asignado",
-    "calc_costo_ventas",
-    "calc_precio_venta",
-    "calc_utilidad",
     "subdepto_responsable",
     "cliente_wa",
     "descripcion_cliente",
-    "productos_resumen"
+    "productos_resumen",
+    "calc_costo_ventas",
+    "calc_precio_venta",
+    "calc_utilidad"
   ],
-  "columnUpdatedAt": 1763422858874,
+  "columnUpdatedAt": 1763750413471,
   "columnWidthMap": {
     "created_at": 168,
     "customColumn1": 148,
@@ -57,8 +57,8 @@
     "fecha_plazo": 155,
     "id": 138,
     "id_compra_cliente": 196,
-    "lista_solicitud": 200,
-    "nombre_asignado": 152,
+    "lista_solicitud": 286,
+    "nombre_asignado": 164.35937499999994,
     "nombre_cliente": 219,
     "subdepto_responsable": 127
   },
@@ -121,10 +121,10 @@
       "key": "primaryColumns.customColumn1.cellBackground"
     },
     {
-      "key": "tableData"
+      "key": "primaryColumns.productos_resumen.computedValue"
     },
     {
-      "key": "primaryColumns.productos_resumen.computedValue"
+      "key": "tableData"
     },
     {
       "key": "primaryColumns.calc_costo_ventas.computedValue"
@@ -196,7 +196,7 @@
       "enableFilter": true,
       "enableSort": true,
       "fontStyle": "",
-      "horizontalAlignment": "RIGHT",
+      "horizontalAlignment": "LEFT",
       "id": "calc_costo_ventas",
       "index": 12,
       "isCellEditable": false,
@@ -207,7 +207,7 @@
       "isEditable": false,
       "isSaveVisible": true,
       "isVisible": true,
-      "label": "Costo",
+      "label": "C.V.",
       "notation": "standard",
       "originalId": "calc_costo_ventas",
       "sticky": "",
@@ -230,7 +230,7 @@
       "enableFilter": true,
       "enableSort": true,
       "fontStyle": "",
-      "horizontalAlignment": "RIGHT",
+      "horizontalAlignment": "LEFT",
       "id": "calc_precio_venta",
       "index": 13,
       "isCellEditable": false,
@@ -241,7 +241,7 @@
       "isEditable": false,
       "isSaveVisible": true,
       "isVisible": true,
-      "label": "Venta",
+      "label": "P.V.",
       "notation": "standard",
       "originalId": "calc_precio_venta",
       "sticky": "",
@@ -264,7 +264,7 @@
       "enableFilter": true,
       "enableSort": true,
       "fontStyle": "",
-      "horizontalAlignment": "RIGHT",
+      "horizontalAlignment": "LEFT",
       "id": "calc_utilidad",
       "index": 14,
       "isCellEditable": false,
@@ -275,7 +275,7 @@
       "isEditable": false,
       "isSaveVisible": true,
       "isVisible": true,
-      "label": "Utilidad",
+      "label": "Ut.",
       "notation": "standard",
       "originalId": "calc_utilidad",
       "sticky": "",
@@ -710,7 +710,7 @@
   "rightColumn": 63,
   "searchKey": "",
   "serverSidePaginationEnabled": false,
-  "tableData": "{{ utils.procesarDataPedidos() }}",
+  "tableData": "{{\n  getPedidosColaborador.data.map(pedido => {\n    let items = pedido.lista_solicitud;\n\n    // 1. Parsing Seguro\n    try {\n        items = (typeof items === 'string') ? JSON.parse(items || '[]') : items || [];\n    } catch (e) {\n        items = [];\n    }\n    \n    // 2. Inicializar acumuladores para los totales financieros\n    let totalCostoVentas = 0;\n    let totalPrecioVenta = 0;\n    let totalUtilidad = 0;\n    \n    let outputHtml = '<span style=\"color: grey;\">- Vacío -</span>';\n\n    if (Array.isArray(items) && items.length > 0) {\n        // 3. Recorrer ítems para Generar Texto Y Sumar Totales\n        const lineasProductos = items.map(item => {\n            // A. Lógica Visual (Listado)\n            const cantidad = item.cantidad || '0';\n            const producto = item.producto || 'Sin descripción';\n            const unidad = item.tipo_unidad ? `(${item.tipo_unidad})` : '';\n\n            // B. Lógica de Suma (Acumulando valores)\n            // Usamos parseFloat y || 0 para evitar errores con nulos\n            totalCostoVentas += parseFloat(item.costo_ventas || 0);\n            totalPrecioVenta += parseFloat(item.precio_venta || 0);\n            totalUtilidad += parseFloat(item.Utilidad || 0);\n\n            return `<b>${cantidad} ${unidad}</b> - ${producto}`;\n        });\n\n        outputHtml = lineasProductos.join('<br>');\n    }\n    \n    // 4. Retornar el objeto con TODO: Resumen visual y Cálculos numéricos\n    return {\n        ...pedido,\n        productos_resumen: outputHtml,\n        // Estos son los campos que leerán tus columnas de moneda:\n        calc_costo_ventas: totalCostoVentas,\n        calc_precio_venta: totalPrecioVenta,\n        calc_utilidad: totalUtilidad\n    };\n  })\n}}",
   "textSize": "0.875rem",
   "topRow": 45,
   "totalRecordsCount": 0,
