@@ -1,5 +1,6 @@
 {
   "accentColor": "{{appsmith.theme.colors.primaryColor}}",
+  "allowAddNewRow": true,
   "animateLoading": true,
   "borderColor": "#E0DEDE",
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
