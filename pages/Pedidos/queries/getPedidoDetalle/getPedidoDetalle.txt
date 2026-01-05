@@ -31,4 +31,4 @@ LEFT JOIN
 LEFT JOIN
     colaboradores col ON p.asignado_a_id = col.id
 WHERE
-    p.id = {{ appsmith.store.currentPedidoId || 0 }};
+    p.id = {{ (this.params && this.params.id) ? this.params.id : (appsmith.store.currentPedidoId || 0) }};

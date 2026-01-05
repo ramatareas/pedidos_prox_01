@@ -1,0 +1,11 @@
+{
+  "gitSyncId": "68f95f221126eb768730abe4_53fa093c-f26c-4b4f-ba58-8fbbd24e31c8",
+  "id": "Pedidos_JS_DescargaExcel",
+  "unpublishedCollection": {
+    "name": "JS_DescargaExcel",
+    "pageId": "Pedidos",
+    "pluginId": "js-plugin",
+    "pluginType": "JS",
+    "variables": []
+  }
+}
