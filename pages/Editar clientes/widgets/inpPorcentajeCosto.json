@@ -5,7 +5,7 @@
   "borderRadius": "{{appsmith.theme.borderRadius.appBorderRadius}}",
   "bottomRow": 30,
   "boxShadow": "none",
-  "defaultText": "{{ tblClientes.selectedRow.porcentaje_sobre_costo }}",
+  "defaultText": "",
   "dynamicBindingPathList": [
     {
       "key": "accentColor"
@@ -15,9 +15,6 @@
     },
     {
       "key": "labelTextColor"
-    },
-    {
-      "key": "defaultText"
     }
   ],
   "dynamicHeight": "FIXED",

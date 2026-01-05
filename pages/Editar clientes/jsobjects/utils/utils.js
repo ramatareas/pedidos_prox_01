@@ -32,19 +32,22 @@ export default {
     return waID;
 }, // <-- COMA
 
-    cargarClienteParaEdicion: () => {
-        const row = tblClientes.selectedRow;
-        
-        // Asignación de valores a widgets de Input (ej. inpNombreCliente, inpTelCelCliente)
-        inpNombreCliente.setValue(row.nombre);
-        inpContactoCliente.setValue(row.contacto); 
-        inpTelCelCliente.setValue(row.tel_cel); 
-        inpDireccionCliente.setValue(row.direccion); 
-        inpEmailCliente.setValue(row.email); 
-        
-        // Almacena el ID para indicar modo EDICIÓN
-        storeValue('currentClienteId', row.id); 
-    }, // <-- COMA
+   cargarClienteParaEdicion: (fila) => {
+    // Si le pasamos 'fila' (desde el botón), usa esa. Si no, busca la seleccionada.
+    const row = fila || tblClientes.selectedRow;
+    
+    if (!row) return; // Protección contra errores
+    // Asignación de valores (Igual que antes)
+    inpNombreCliente.setValue(row.nombre);
+    inpContactoCliente.setValue(row.contacto); 
+    inpTelCelCliente.setValue(row.tel_cel); 
+    inpDireccionCliente.setValue(row.direccion); 
+    inpEmailCliente.setValue(row.email); 
+		inpPorcentajeCosto.setValue(row.porcentaje_sobre_costo);
+    
+    // Almacena el ID para indicar modo EDICIÓN
+    storeValue('currentClienteId', row.id); 
+}, // <-- COMA
 
     guardarCliente: async () => {
     const telCelValue = inpTelCelCliente.text;

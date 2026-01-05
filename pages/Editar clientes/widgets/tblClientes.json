@@ -32,6 +32,7 @@
     }
   },
   "columnOrder": [
+    "customColumn1",
     "id",
     "created_at",
     "tel_cel",
@@ -42,11 +43,12 @@
     "email",
     "cliente_wa"
   ],
-  "columnUpdatedAt": 1763096546548,
+  "columnUpdatedAt": 1767638411158,
   "columnWidthMap": {
     "cliente_wa": 241,
     "contacto": 203,
     "created_at": 244,
+    "customColumn1": 100,
     "direccion": 240,
     "id": 83,
     "nombre": 395,
@@ -100,6 +102,15 @@
     },
     {
       "key": "primaryColumns.email.computedValue"
+    },
+    {
+      "key": "primaryColumns.customColumn1.buttonColor"
+    },
+    {
+      "key": "primaryColumns.customColumn1.borderRadius"
+    },
+    {
+      "key": "primaryColumns.customColumn1.boxShadow"
     }
   ],
   "dynamicPropertyPathList": [
@@ -108,11 +119,17 @@
     },
     {
       "key": "onRowSelected"
+    },
+    {
+      "key": "primaryColumns.customColumn1.onClick"
     }
   ],
   "dynamicTriggerPathList": [
     {
       "key": "onRowSelected"
+    },
+    {
+      "key": "primaryColumns.customColumn1.onClick"
     }
   ],
   "enableClientSideSearch": true,
@@ -136,7 +153,7 @@
   "mobileRightColumn": 33,
   "mobileTopRow": 54,
   "needsErrorInfo": false,
-  "onRowSelected": "{{ utils.cargarClienteParaEdicion() }}",
+  "onRowSelected": "",
   "originalBottomRow": 85,
   "originalTopRow": 40,
   "parentColumnSpace": 23.390625,
@@ -239,6 +256,45 @@
       "originalId": "created_at",
       "sticky": "",
       "textColor": "",
+      "textSize": "0.875rem",
+      "thousandSeparator": true,
+      "validation": {},
+      "verticalAlignment": "CENTER",
+      "width": 150
+    },
+    "customColumn1": {
+      "alias": "Editar",
+      "allowCellWrapping": false,
+      "allowSameOptionsInNewRow": true,
+      "borderRadius": "{{tblClientes.processedTableData.map((currentRow, currentIndex) => ( (appsmith.theme.borderRadius.appBorderRadius)))}}",
+      "boxShadow": "{{tblClientes.processedTableData.map((currentRow, currentIndex) => ( \"none\"))}}",
+      "buttonColor": "{{tblClientes.processedTableData.map((currentRow, currentIndex) => ( (appsmith.theme.colors.primaryColor)))}}",
+      "buttonStyle": "rgb(3, 179, 101)",
+      "columnType": "iconButton",
+      "computedValue": "",
+      "currencyCode": "USD",
+      "customAlias": "",
+      "decimals": 0,
+      "enableFilter": true,
+      "enableSort": true,
+      "horizontalAlignment": "LEFT",
+      "iconName": "edit",
+      "id": "customColumn1",
+      "index": 9,
+      "isCellEditable": false,
+      "isCellVisible": true,
+      "isDerived": true,
+      "isDisabled": false,
+      "isDiscardVisible": true,
+      "isEditable": false,
+      "isSaveVisible": true,
+      "isVisible": true,
+      "label": "Editar",
+      "labelColor": "#FFFFFF",
+      "notation": "standard",
+      "onClick": "{{ utils.cargarClienteParaEdicion(currentRow) }}",
+      "originalId": "customColumn1",
+      "sticky": "",
       "textSize": "0.875rem",
       "thousandSeparator": true,
       "validation": {},
