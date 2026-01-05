@@ -29,7 +29,7 @@
     ],
     "name": "getCurrentColaboradorId",
     "pageId": "Pedidos",
-    "runBehaviour": "AUTOMATIC",
+    "runBehaviour": "MANUAL",
     "userSetOnLoad": false
   }
 }
