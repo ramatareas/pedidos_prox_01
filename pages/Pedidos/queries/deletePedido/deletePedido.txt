@@ -1,0 +1,1 @@
+delete from public.pedidos where id = {{this.params.id}};
