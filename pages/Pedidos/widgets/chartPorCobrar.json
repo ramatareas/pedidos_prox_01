@@ -112,6 +112,7 @@
   "renderMode": "CANVAS",
   "responsiveBehavior": "fill",
   "rightColumn": 64,
+  "setAdaptiveYMin": false,
   "showDataPointLabel": true,
   "topRow": 0,
   "type": "CHART_WIDGET",
